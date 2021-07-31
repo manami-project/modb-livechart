@@ -6,6 +6,7 @@ import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.httpclient.*
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
+import org.jsoup.Jsoup
 
 /**
  * Downloads anime data from livechart.me
@@ -27,6 +28,12 @@ public class LivechartDownloader(
         )
 
         check(response.body.isNotBlank()) { "Response body was blank for [livechartId=$id] with response code [${response.code}]" }
+
+        val title = Jsoup.parse(response.body).select("title").text().trim()
+        if (title.startsWith("Excluded from the LiveChart.me Database")) {
+            onDeadEntry.invoke(id)
+            return EMPTY
+        }
 
         return when(response.code) {
             200 -> response.body

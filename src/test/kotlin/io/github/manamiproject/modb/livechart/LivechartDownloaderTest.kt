@@ -10,6 +10,7 @@ import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.extensions.toAnimeId
 import io.github.manamiproject.modb.test.MockServerTestCase
 import io.github.manamiproject.modb.test.WireMockServerCreator
+import io.github.manamiproject.modb.test.loadTestResource
 import io.github.manamiproject.modb.test.shouldNotBeInvoked
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -70,6 +71,39 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
                         .withHeader("Content-Type", "text/html")
                         .withStatus(404)
                         .withBody("<html><head><title>Page Not Found | LiveChart.me</title><body></body></html>")
+                )
+        )
+
+        val livechartDownloader = LivechartDownloader(testLivechartConfig)
+
+        // when
+        val result = livechartDownloader.download(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
+
+        // then
+        assertThat(hasDeadEntryBeenInvoked).isTrue()
+        assertThat(result).isBlank()
+    }
+
+    @Test
+    fun `excluded from database page - add to dead entry list and return empty string`() {
+        // given
+        val id = 1535
+        var hasDeadEntryBeenInvoked = false
+
+        val testLivechartConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
+            override fun hostname(): Hostname = "localhost"
+            override fun buildAnimeLink(id: AnimeId): URI = URI("http://localhost:$port/anime/$id")
+            override fun buildDataDownloadLink(id: String): URI = buildAnimeLink(id)
+            override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
+        }
+
+        serverInstance.stubFor(
+            get(urlPathEqualTo("/anime/$id"))
+                .willReturn(
+                    aResponse()
+                        .withHeader("Content-Type", "text/html")
+                        .withStatus(200)
+                        .withBody(loadTestResource("downloader_tests/excluded_from_database.html"))
                 )
         )
 
