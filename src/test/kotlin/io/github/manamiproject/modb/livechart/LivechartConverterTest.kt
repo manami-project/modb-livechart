@@ -226,7 +226,7 @@ internal class LivechartConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.episodes).isEqualTo(978)
+            assertThat(result.episodes).isEqualTo(988)
         }
     }
 
@@ -1141,6 +1141,7 @@ internal class LivechartConverterTest {
                 URI("https://livechart.me/anime/2691"),
                 URI("https://livechart.me/anime/8311"),
                 URI("https://livechart.me/anime/127"),
+                URI("https://livechart.me/anime/10692"),
                 URI("https://livechart.me/anime/6762"),
                 URI("https://livechart.me/anime/339"),
                 URI("https://livechart.me/anime/353"),

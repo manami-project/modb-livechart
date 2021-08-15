@@ -56,7 +56,7 @@ fun main() {
     downloader.download("10596").writeToFile(resourceFile("file_converter_tests/tags/no_tags.html"))
     downloader.download("2388").writeToFile(resourceFile("file_converter_tests/tags/one_tag.html"))
 
-    downloader.download("10186").writeToFile(resourceFile("file_converter_tests/title/special_chars.html.html"))
+    downloader.download("10186").writeToFile(resourceFile("file_converter_tests/title/special_chars.html"))
 
     downloader.download("1296").writeToFile(resourceFile("file_converter_tests/type/movie.html"))
     downloader.download("3796").writeToFile(resourceFile("file_converter_tests/type/ova.html"))
