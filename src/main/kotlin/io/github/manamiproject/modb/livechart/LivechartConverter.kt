@@ -269,12 +269,12 @@ public class LivechartConverter(
 
 private data class LivechartParsedData(
     val url: String? = null,
-    val genre: ArrayList<String>? = null,
+    val genre: List<String>? = null,
     val name: String? = null,
     val image: String? = null,
     val numberOfEpisodes: Int? = null,
     val datePublished: String? = null,
-    val alternateName: ArrayList<String>? = null,
+    val alternateName: List<String>? = null,
 )
 
 private data class LivechartData(

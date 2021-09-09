@@ -20,7 +20,7 @@ public class LivechartDownloader(
 ): Downloader {
 
     override fun download(id: AnimeId, onDeadEntry: (AnimeId) -> Unit): String {
-        log.debug("Downloading [livechartId={}]", id)
+        log.debug { "Downloading [livechartId=$id]" }
 
         val response = httpClient.get(
             url = config.buildDataDownloadLink(id).toURL(),
