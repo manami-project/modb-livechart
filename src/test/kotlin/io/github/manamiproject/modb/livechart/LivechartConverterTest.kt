@@ -41,6 +41,28 @@ internal class LivechartConverterTest {
             // then
             assertThat(result.title).isEqualTo("Alice Gear Aegis: Doki! Actress Darake no Mermaid Grand Prix ♡")
         }
+
+        @Test
+        fun `title containing encoded special chars`() {
+            // given
+            val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                override fun buildAnimeLink(id: AnimeId): URI = LivechartConfig.buildAnimeLink(id)
+                override fun buildDataDownloadLink(id: String): URI = LivechartConfig.buildDataDownloadLink(id)
+                override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
+            }
+
+            val testFile = loadTestResource("file_converter_tests/title/encoded_special_char.html")
+
+            val converter = LivechartConverter(
+                config = testLivechartConfig,
+            )
+
+            // when
+            val result = converter.convert(testFile)
+
+            // then
+            assertThat(result.title).isEqualTo("Love Live! School Idol Project: μ's →NEXT LoveLive! 2014 - Endless Parade Encore Animation")
+        }
     }
 
     @Nested
@@ -113,6 +135,28 @@ internal class LivechartConverterTest {
                 "Angels of Death",
                 "殺戮の天使",
             )
+        }
+
+        @Test
+        fun `synonym containing encoded special char`() {
+            // given
+            val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                override fun buildAnimeLink(id: AnimeId): URI = LivechartConfig.buildAnimeLink(id)
+                override fun buildDataDownloadLink(id: String): URI = LivechartConfig.buildDataDownloadLink(id)
+                override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
+            }
+
+            val testFile = loadTestResource("file_converter_tests/synonyms/encoded_special_chars.html")
+
+            val converter = LivechartConverter(
+                config = testLivechartConfig,
+            )
+
+            // when
+            val result = converter.convert(testFile)
+
+            // then
+            assertThat(result.synonyms).containsExactly("ラブライブ! μ's Final LoveLive! オープニングアニメーション")
         }
     }
 

@@ -3,13 +3,14 @@ package io.github.manamiproject.modb.livechart
 import io.github.manamiproject.modb.core.Json
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
-import io.github.manamiproject.modb.core.extensions.*
+import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.models.*
 import io.github.manamiproject.modb.core.models.Anime.Status.*
 import io.github.manamiproject.modb.core.models.Anime.Type.*
 import io.github.manamiproject.modb.core.models.Anime.Type.UNKNOWN
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.SECONDS
+import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.net.URI
@@ -50,9 +51,11 @@ public class LivechartConverter(
     }
 
     private fun extractTitle(jsonData: LivechartData, document: Document): Title {
-        return jsonData.name.ifBlank {
+        val extractedTitle = jsonData.name.ifBlank {
             document.select("meta[property=og:title]").attr("content").trim()
         }
+
+        return StringEscapeUtils.unescapeHtml4(extractedTitle)
     }
 
     private fun extractEpisodes(jsonData: LivechartData, document: Document): Episodes {
@@ -233,7 +236,9 @@ public class LivechartConverter(
         return setOf(source)
     }
 
-    private fun extractSynonyms(jsonData: LivechartData): Collection<Title> = jsonData.alternateName.toSet()
+    private fun extractSynonyms(jsonData: LivechartData): Collection<Title> {
+        return jsonData.alternateName.map { StringEscapeUtils.unescapeHtml4(it) }.toSet()
+    }
 
     private fun extractRelatedAnime(document: Document): Collection<URI> {
         return document.select("article[class=compact-anime-card] > a")

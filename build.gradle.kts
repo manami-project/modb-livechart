@@ -36,6 +36,7 @@ dependencies {
 
     implementation(platform(kotlin("bom")))
     implementation("org.jsoup:jsoup:1.14.3")
+    implementation("org.apache.commons:commons-text:1.9")
 
     testImplementation("ch.qos.logback:logback-classic:1.2.6")
     testImplementation("io.github.manamiproject:modb-test:1.2.11")

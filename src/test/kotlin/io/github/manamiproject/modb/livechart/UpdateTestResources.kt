@@ -48,6 +48,7 @@ fun main() {
     downloader.download("10391").writeToFile(resourceFile("file_converter_tests/status/upcoming_known_date.html"))
     downloader.download("10420").writeToFile(resourceFile("file_converter_tests/status/upcoming_unknown_date.html"))
 
+    downloader.download("8081").writeToFile(resourceFile("file_converter_tests/synonyms/encoded_special_chars.html"))
     downloader.download("2805").writeToFile(resourceFile("file_converter_tests/synonyms/multiple_synonyms.html"))
     downloader.download("10209").writeToFile(resourceFile("file_converter_tests/synonyms/no_synonyms.html"))
     downloader.download("9665").writeToFile(resourceFile("file_converter_tests/synonyms/one_synonym.html"))
@@ -56,6 +57,7 @@ fun main() {
     downloader.download("10596").writeToFile(resourceFile("file_converter_tests/tags/no_tags.html"))
     downloader.download("2388").writeToFile(resourceFile("file_converter_tests/tags/one_tag.html"))
 
+    downloader.download("7907").writeToFile(resourceFile("file_converter_tests/title/encoded_special_char.html"))
     downloader.download("10186").writeToFile(resourceFile("file_converter_tests/title/special_chars.html"))
 
     downloader.download("1296").writeToFile(resourceFile("file_converter_tests/type/movie.html"))
