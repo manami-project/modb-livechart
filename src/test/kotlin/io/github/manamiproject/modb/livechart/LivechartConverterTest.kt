@@ -270,7 +270,7 @@ internal class LivechartConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.episodes).isEqualTo(988)
+            assertThat(result.episodes).isEqualTo(1006)
         }
     }
 
@@ -971,7 +971,7 @@ internal class LivechartConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.animeSeason.year).isEqualTo(2021)
+                assertThat(result.animeSeason.year).isEqualTo(2022)
             }
         }
     }
@@ -1137,11 +1137,9 @@ internal class LivechartConverterTest {
 
             // then
             assertThat(result.relatedAnime).containsExactlyInAnyOrder(
-                URI("https://livechart.me/anime/3822"),
-                URI("https://livechart.me/anime/3657"),
-                URI("https://livechart.me/anime/3588"),
-                URI("https://livechart.me/anime/3681"),
-                URI("https://livechart.me/anime/10537"),
+                URI("https://livechart.me/anime/3367"),
+                URI("https://livechart.me/anime/3369"),
+                URI("https://livechart.me/anime/3368"),
             )
         }
 

@@ -66,7 +66,7 @@ public class LivechartConverter(
         // regular value in data table
         if (episodes == 0) {
             val episodesValue = document.select("div[class=info-bar anime-meta-bar]")
-                .select("div:matchesOwn(episodes)")
+                .select("div:matchesOwn(Episodes)")
                 .next()
                 .text()
                 .trim()
@@ -98,7 +98,7 @@ public class LivechartConverter(
 
     private fun extractType(document: Document): Anime.Type {
         val value = document.select("div[class=info-bar anime-meta-bar]")
-            .select("div:matchesOwn(format)")
+            .select("div:matchesOwn(Format)")
             .next()
             .text()
             .trim()
@@ -161,7 +161,7 @@ public class LivechartConverter(
 
     private fun extractDuration(document: Document): Duration {
         val value = document.select("div[class=info-bar anime-meta-bar]")
-            .select("div:matchesOwn(run time)")
+            .select("div:matchesOwn(Run time)")
             .next()
             .text()
             .trim()
