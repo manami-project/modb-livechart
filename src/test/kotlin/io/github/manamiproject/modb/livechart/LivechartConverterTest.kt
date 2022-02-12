@@ -270,7 +270,7 @@ internal class LivechartConverterTest {
             val result = converter.convert(testFile)
 
             // then
-            assertThat(result.episodes).isEqualTo(1006)
+            assertThat(result.episodes).isEqualTo(1008)
         }
     }
 
@@ -1178,20 +1178,6 @@ internal class LivechartConverterTest {
                 URI("https://livechart.me/anime/7156"),
                 URI("https://livechart.me/anime/4054"),
                 URI("https://livechart.me/anime/6022"),
-                URI("https://livechart.me/anime/6918"),
-                URI("https://livechart.me/anime/5170"),
-                URI("https://livechart.me/anime/2691"),
-                URI("https://livechart.me/anime/8311"),
-                URI("https://livechart.me/anime/127"),
-                URI("https://livechart.me/anime/10692"),
-                URI("https://livechart.me/anime/6762"),
-                URI("https://livechart.me/anime/339"),
-                URI("https://livechart.me/anime/353"),
-                URI("https://livechart.me/anime/1358"),
-                URI("https://livechart.me/anime/793"),
-                URI("https://livechart.me/anime/1823"),
-                URI("https://livechart.me/anime/2664"),
-                URI("https://livechart.me/anime/9894"),
             )
         }
     }
