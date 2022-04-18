@@ -113,6 +113,7 @@ public class LivechartConverter(
             "Web" -> ONA
             "Web Short" -> ONA
             "?" -> UNKNOWN
+            "Unknown" -> UNKNOWN
             else -> throw IllegalStateException("Unknown type [$value]")
         }
     }

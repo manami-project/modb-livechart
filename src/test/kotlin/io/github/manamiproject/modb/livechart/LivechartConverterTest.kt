@@ -386,6 +386,28 @@ internal class LivechartConverterTest {
                 override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
             }
 
+            val testFile = loadTestResource("file_converter_tests/type/questionmark.html")
+
+            val converter = LivechartConverter(
+                config = testLivechartConfig,
+            )
+
+            // when
+            val result = converter.convert(testFile)
+
+            // then
+            assertThat(result.type).isEqualTo(UNKNOWN)
+        }
+
+        @Test
+        fun `Unknown is mapped to 'UNKNOWN'`() {
+            // given
+            val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                override fun buildAnimeLink(id: AnimeId): URI = LivechartConfig.buildAnimeLink(id)
+                override fun buildDataDownloadLink(id: String): URI = LivechartConfig.buildDataDownloadLink(id)
+                override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
+            }
+
             val testFile = loadTestResource("file_converter_tests/type/unknown.html")
 
             val converter = LivechartConverter(
