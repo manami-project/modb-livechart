@@ -37,7 +37,7 @@ dependencies {
     api(kotlin("stdlib-jdk8"))
 
     implementation(platform(kotlin("bom")))
-    implementation("org.jsoup:jsoup:1.15.1")
+    implementation("org.jsoup:jsoup:1.15.2")
     implementation("org.apache.commons:commons-text:1.9")
 
     testImplementation("ch.qos.logback:logback-classic:1.2.11")
