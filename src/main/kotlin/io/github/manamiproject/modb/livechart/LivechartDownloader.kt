@@ -2,10 +2,15 @@ package io.github.manamiproject.modb.livechart
 
 import io.github.manamiproject.modb.core.config.AnimeId
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
+import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
+import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_NETWORK
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.extensions.EMPTY
-import io.github.manamiproject.modb.core.httpclient.*
+import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
+import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 
 /**
@@ -16,13 +21,20 @@ import org.jsoup.Jsoup
  */
 public class LivechartDownloader(
     private val config: MetaDataProviderConfig = LivechartConfig,
-    private val httpClient: HttpClient = DefaultHttpClient()
+    private val httpClient: HttpClient = DefaultHttpClient(isTestContext = config.isTestContext()),
 ): Downloader {
 
-    override fun download(id: AnimeId, onDeadEntry: (AnimeId) -> Unit): String {
+    @Deprecated("Use coroutines",
+        ReplaceWith("runBlocking { downloadSuspendable(id, onDeadEntry) }", "kotlinx.coroutines.runBlocking")
+    )
+    override fun download(id: AnimeId, onDeadEntry: (AnimeId) -> Unit): String = runBlocking {
+        downloadSuspendable(id, onDeadEntry)
+    }
+
+    override suspend fun downloadSuspendable(id: AnimeId, onDeadEntry: (AnimeId) -> Unit): String = withContext(LIMITED_NETWORK) {
         log.debug { "Downloading [livechartId=$id]" }
 
-        val response = httpClient.get(
+        val response = httpClient.getSuspedable(
             url = config.buildDataDownloadLink(id).toURL(),
             headers = mapOf("host" to listOf("www.${config.hostname()}")),
         )
@@ -32,10 +44,10 @@ public class LivechartDownloader(
         val title = Jsoup.parse(response.body).select("title").text().trim()
         if (title.startsWith("Excluded from the LiveChart.me Database")) {
             onDeadEntry.invoke(id)
-            return EMPTY
+            return@withContext EMPTY
         }
 
-        return when(response.code) {
+        return@withContext when(response.code) {
             200 -> response.body
             404 -> {
                 onDeadEntry.invoke(id)
