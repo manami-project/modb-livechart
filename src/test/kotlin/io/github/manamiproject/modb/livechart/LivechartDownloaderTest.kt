@@ -8,13 +8,10 @@ import io.github.manamiproject.modb.core.config.Hostname
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.extensions.toAnimeId
-import io.github.manamiproject.modb.test.MockServerTestCase
-import io.github.manamiproject.modb.test.WireMockServerCreator
-import io.github.manamiproject.modb.test.loadTestResource
-import io.github.manamiproject.modb.test.shouldNotBeInvoked
+import io.github.manamiproject.modb.test.*
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.net.URI
 
 internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by WireMockServerCreator() {
@@ -45,7 +42,9 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
         val liveChartDownloader = LivechartDownloader(testLivechartConfig)
 
         // when
-        val result = liveChartDownloader.download(id = id.toAnimeId(), onDeadEntry = { shouldNotBeInvoked() })
+        val result = runBlocking {
+            liveChartDownloader.downloadSuspendable(id = id.toAnimeId(), onDeadEntry = { shouldNotBeInvoked() })
+        }
 
         // then
         assertThat(result).isEqualTo(responseBody)
@@ -77,7 +76,9 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
         val livechartDownloader = LivechartDownloader(testLivechartConfig)
 
         // when
-        val result = livechartDownloader.download(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
+        val result = runBlocking {
+            livechartDownloader.downloadSuspendable(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
+        }
 
         // then
         assertThat(hasDeadEntryBeenInvoked).isTrue()
@@ -110,7 +111,9 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
         val livechartDownloader = LivechartDownloader(testLivechartConfig)
 
         // when
-        val result = livechartDownloader.download(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
+        val result = runBlocking {
+            livechartDownloader.downloadSuspendable(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
+        }
 
         // then
         assertThat(hasDeadEntryBeenInvoked).isTrue()
@@ -141,8 +144,8 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
         val livechartDownloader = LivechartDownloader(testLivechartConfig)
 
         // when
-        val result = assertThrows<IllegalStateException> {
-            livechartDownloader.download(id.toAnimeId()) { shouldNotBeInvoked() }
+        val result = exceptionExpected<IllegalStateException> {
+            livechartDownloader.downloadSuspendable(id.toAnimeId()) { shouldNotBeInvoked() }
         }
 
         // then
@@ -174,8 +177,8 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
         val livechartDownloader = LivechartDownloader(testLivechartConfig)
 
         // when
-        val result = assertThrows<IllegalStateException> {
-            livechartDownloader.download(id = id.toAnimeId(), onDeadEntry = { shouldNotBeInvoked() })
+        val result = exceptionExpected<IllegalStateException> {
+            livechartDownloader.downloadSuspendable(id = id.toAnimeId(), onDeadEntry = { shouldNotBeInvoked() })
         }
 
         // then

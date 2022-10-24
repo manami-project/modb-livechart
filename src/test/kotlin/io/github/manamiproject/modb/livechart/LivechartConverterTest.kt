@@ -10,6 +10,7 @@ import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.models.Duration
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.*
 import io.github.manamiproject.modb.test.loadTestResource
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -36,7 +37,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.title).isEqualTo("Alice Gear Aegis: Doki! Actress Darake no Mermaid Grand Prix ♡")
@@ -58,7 +61,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.title).isEqualTo("Love Live! School Idol Project: μ's →NEXT LoveLive! 2014 - Endless Parade Encore Animation")
@@ -84,7 +89,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.synonyms).isEmpty()
@@ -106,7 +113,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.synonyms).containsExactly("劇場版 少女☆歌劇 レヴュースタァライト ロンド・ロンド・ロンド")
@@ -128,7 +137,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.synonyms).containsExactlyInAnyOrder(
@@ -153,7 +164,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.synonyms).containsExactly("ラブライブ! μ's Final LoveLive! オープニングアニメーション")
@@ -179,7 +192,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.episodes).isZero()
@@ -201,7 +216,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.episodes).isOne()
@@ -223,7 +240,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.episodes).isEqualTo(10)
@@ -245,7 +264,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.episodes).isEqualTo(100)
@@ -267,7 +288,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.episodes).isEqualTo(1008)
@@ -293,7 +316,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.sources).containsExactly(URI("https://livechart.me/anime/3437"))
@@ -320,7 +345,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.picture).isEqualTo(URI("https://cdn.myanimelist.net/images/qm_50.gif"))
@@ -344,7 +371,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.picture).isEqualTo(URI("https://u.livechart.me/anime/3437/poster_image/ea9acd1ccea844fd9c4debde5e8e631e.png?style=large&format=jpg"))
@@ -371,7 +400,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(TV)
@@ -393,7 +424,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(UNKNOWN)
@@ -415,7 +448,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(UNKNOWN)
@@ -437,7 +472,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(TV)
@@ -459,7 +496,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(MOVIE)
@@ -481,7 +520,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(ONA)
@@ -503,7 +544,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(ONA)
@@ -525,7 +568,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(OVA)
@@ -547,7 +592,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.type).isEqualTo(SPECIAL)
@@ -573,7 +620,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(1, HOURS))
@@ -595,7 +644,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(71, MINUTES))
@@ -617,7 +668,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(2, HOURS))
@@ -639,7 +692,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(135, MINUTES))
@@ -661,7 +716,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(10, MINUTES))
@@ -683,7 +740,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(30, SECONDS))
@@ -705,7 +764,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.duration).isEqualTo(Duration(0, SECONDS))
@@ -731,7 +792,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.tags).containsExactly(
@@ -759,7 +822,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.tags).containsExactly("comedy")
@@ -781,7 +846,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.tags).isEmpty()
@@ -810,7 +877,9 @@ internal class LivechartConverterTest {
                 )
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.season).isEqualTo(UNDEFINED)
@@ -832,7 +901,9 @@ internal class LivechartConverterTest {
                 )
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.season).isEqualTo(FALL)
@@ -854,7 +925,9 @@ internal class LivechartConverterTest {
                 )
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.season).isEqualTo(SPRING)
@@ -876,7 +949,9 @@ internal class LivechartConverterTest {
                 )
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.season).isEqualTo(SUMMER)
@@ -898,7 +973,9 @@ internal class LivechartConverterTest {
                 )
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.season).isEqualTo(WINTER)
@@ -924,7 +1001,9 @@ internal class LivechartConverterTest {
                 )
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(2021)
@@ -946,7 +1025,9 @@ internal class LivechartConverterTest {
                 )
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(2022)
@@ -968,7 +1049,9 @@ internal class LivechartConverterTest {
                 )
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isZero()
@@ -990,7 +1073,9 @@ internal class LivechartConverterTest {
                 )
 
                 // when
-                val result = converter.convert(testFile)
+                val result = runBlocking {
+                    converter.convertSuspendable(testFile)
+                }
 
                 // then
                 assertThat(result.animeSeason.year).isEqualTo(2022)
@@ -1017,7 +1102,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(ONGOING)
@@ -1039,7 +1126,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(UPCOMING)
@@ -1061,7 +1150,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(UPCOMING)
@@ -1083,7 +1174,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.status).isEqualTo(FINISHED)
@@ -1109,7 +1202,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.relatedAnime).isEmpty()
@@ -1131,7 +1226,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.relatedAnime).containsExactly(
@@ -1155,7 +1252,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.relatedAnime).containsExactlyInAnyOrder(
@@ -1181,7 +1280,9 @@ internal class LivechartConverterTest {
             )
 
             // when
-            val result = converter.convert(testFile)
+            val result = runBlocking {
+                converter.convertSuspendable(testFile)
+            }
 
             // then
             assertThat(result.relatedAnime).containsExactlyInAnyOrder(

@@ -3,6 +3,7 @@ package io.github.manamiproject.modb.livechart
 import io.github.manamiproject.modb.core.Json
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
+import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.models.*
 import io.github.manamiproject.modb.core.models.Anime.Status.*
@@ -10,6 +11,8 @@ import io.github.manamiproject.modb.core.models.Anime.Type.*
 import io.github.manamiproject.modb.core.models.Anime.Type.UNKNOWN
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.SECONDS
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -25,15 +28,22 @@ public class LivechartConverter(
     private val config: MetaDataProviderConfig = LivechartConfig,
 ): AnimeConverter {
 
-    override fun convert(rawContent: String): Anime {
+    @Deprecated("Use coroutines",
+        ReplaceWith("runBlocking { convertSuspendable(rawContent) }", "kotlinx.coroutines.runBlocking")
+    )
+    override fun convert(rawContent: String): Anime = runBlocking{
+        convertSuspendable(rawContent)
+    }
+
+    override suspend fun convertSuspendable(rawContent: String): Anime = withContext(LIMITED_CPU) {
         val htmlDocument = Jsoup.parse(rawContent)
         val rawJson = htmlDocument.select("script[type=application/ld+json]").first()!!.data().trim()
-        val jsonData = LivechartData(Json.parseJson<LivechartParsedData>(rawJson)!!)
+        val jsonData = LivechartData(Json.parseJsonSuspendable<LivechartParsedData>(rawJson)!!)
 
         val picture = extractPicture(jsonData, htmlDocument)
         val sources = extractSourcesEntry(jsonData, htmlDocument)
 
-        return Anime(
+        return@withContext Anime(
             _title = extractTitle(jsonData, htmlDocument),
             episodes = extractEpisodes(jsonData, htmlDocument),
             type = extractType(htmlDocument),
@@ -196,7 +206,7 @@ public class LivechartConverter(
             .find { identifier.matches(it) }
             ?.split('-')
             ?.let { it[0].lowercase() to it[1] }
-            ?: EMPTY to EMPTY
+            ?: (EMPTY to EMPTY)
 
         val season = when(premiere.first) {
             "winter" -> WINTER
@@ -286,7 +296,6 @@ private data class LivechartParsedData(
 private data class LivechartData(
     val livechartParsedData: LivechartParsedData
 ) {
-
     val url: String
         get() = livechartParsedData.url?.trim() ?: EMPTY
 
