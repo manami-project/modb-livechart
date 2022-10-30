@@ -2,7 +2,6 @@ package io.github.manamiproject.modb.livechart
 
 import io.github.manamiproject.modb.core.config.AnimeId
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
-import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_NETWORK
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.extensions.EMPTY
@@ -24,14 +23,12 @@ public class LivechartDownloader(
     private val httpClient: HttpClient = DefaultHttpClient(isTestContext = config.isTestContext()),
 ): Downloader {
 
-    @Deprecated("Use coroutines",
-        ReplaceWith("runBlocking { downloadSuspendable(id, onDeadEntry) }", "kotlinx.coroutines.runBlocking")
-    )
+    @Deprecated("Use coroutines", ReplaceWith(EMPTY))
     override fun download(id: AnimeId, onDeadEntry: (AnimeId) -> Unit): String = runBlocking {
         downloadSuspendable(id, onDeadEntry)
     }
 
-    override suspend fun downloadSuspendable(id: AnimeId, onDeadEntry: (AnimeId) -> Unit): String = withContext(LIMITED_NETWORK) {
+    override suspend fun downloadSuspendable(id: AnimeId, onDeadEntry: suspend (AnimeId) -> Unit): String = withContext(LIMITED_NETWORK) {
         log.debug { "Downloading [livechartId=$id]" }
 
         val response = httpClient.getSuspedable(
