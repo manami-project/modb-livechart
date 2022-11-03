@@ -12,7 +12,6 @@ import io.github.manamiproject.modb.core.models.Anime.Type.UNKNOWN
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.SECONDS
 import io.github.manamiproject.modb.core.parseHtml
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.apache.commons.text.StringEscapeUtils
 import org.jsoup.nodes.Document
@@ -28,15 +27,10 @@ public class LivechartConverter(
     private val config: MetaDataProviderConfig = LivechartConfig,
 ): AnimeConverter {
 
-    @Deprecated("Use coroutines", ReplaceWith(EMPTY))
-    override fun convert(rawContent: String): Anime = runBlocking{
-        convertSuspendable(rawContent)
-    }
-
-    override suspend fun convertSuspendable(rawContent: String): Anime = withContext(LIMITED_CPU) {
+    override suspend fun convert(rawContent: String): Anime = withContext(LIMITED_CPU) {
         val htmlDocument = parseHtml(rawContent)
         val rawJson = htmlDocument.select("script[type=application/ld+json]").first()!!.data().trim()
-        val jsonData = LivechartData(Json.parseJsonSuspendable<LivechartParsedData>(rawJson)!!)
+        val jsonData = LivechartData(Json.parseJson<LivechartParsedData>(rawJson)!!)
 
         val picture = extractPicture(jsonData, htmlDocument)
         val sources = extractSourcesEntry(jsonData, htmlDocument)

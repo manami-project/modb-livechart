@@ -38,7 +38,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -62,7 +62,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -90,7 +90,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -114,7 +114,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -138,7 +138,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -165,7 +165,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -193,7 +193,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -217,7 +217,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -241,7 +241,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -265,7 +265,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -289,7 +289,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -317,7 +317,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -346,7 +346,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -372,7 +372,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -401,7 +401,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -425,7 +425,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -449,7 +449,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -473,7 +473,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -497,7 +497,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -521,7 +521,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -545,7 +545,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -569,7 +569,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -593,7 +593,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -621,7 +621,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -645,7 +645,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -669,7 +669,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -693,7 +693,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -717,7 +717,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -741,7 +741,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -765,7 +765,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -793,7 +793,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -823,7 +823,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -847,7 +847,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -878,7 +878,7 @@ internal class LivechartConverterTest {
 
                 // when
                 val result = runBlocking {
-                    converter.convertSuspendable(testFile)
+                    converter.convert(testFile)
                 }
 
                 // then
@@ -902,7 +902,7 @@ internal class LivechartConverterTest {
 
                 // when
                 val result = runBlocking {
-                    converter.convertSuspendable(testFile)
+                    converter.convert(testFile)
                 }
 
                 // then
@@ -926,7 +926,7 @@ internal class LivechartConverterTest {
 
                 // when
                 val result = runBlocking {
-                    converter.convertSuspendable(testFile)
+                    converter.convert(testFile)
                 }
 
                 // then
@@ -950,7 +950,7 @@ internal class LivechartConverterTest {
 
                 // when
                 val result = runBlocking {
-                    converter.convertSuspendable(testFile)
+                    converter.convert(testFile)
                 }
 
                 // then
@@ -974,7 +974,7 @@ internal class LivechartConverterTest {
 
                 // when
                 val result = runBlocking {
-                    converter.convertSuspendable(testFile)
+                    converter.convert(testFile)
                 }
 
                 // then
@@ -1002,7 +1002,7 @@ internal class LivechartConverterTest {
 
                 // when
                 val result = runBlocking {
-                    converter.convertSuspendable(testFile)
+                    converter.convert(testFile)
                 }
 
                 // then
@@ -1026,7 +1026,7 @@ internal class LivechartConverterTest {
 
                 // when
                 val result = runBlocking {
-                    converter.convertSuspendable(testFile)
+                    converter.convert(testFile)
                 }
 
                 // then
@@ -1050,7 +1050,7 @@ internal class LivechartConverterTest {
 
                 // when
                 val result = runBlocking {
-                    converter.convertSuspendable(testFile)
+                    converter.convert(testFile)
                 }
 
                 // then
@@ -1074,7 +1074,7 @@ internal class LivechartConverterTest {
 
                 // when
                 val result = runBlocking {
-                    converter.convertSuspendable(testFile)
+                    converter.convert(testFile)
                 }
 
                 // then
@@ -1103,7 +1103,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -1127,7 +1127,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -1151,7 +1151,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -1175,7 +1175,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -1203,7 +1203,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -1227,7 +1227,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -1253,7 +1253,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then
@@ -1281,7 +1281,7 @@ internal class LivechartConverterTest {
 
             // when
             val result = runBlocking {
-                converter.convertSuspendable(testFile)
+                converter.convert(testFile)
             }
 
             // then

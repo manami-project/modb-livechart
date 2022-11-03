@@ -43,7 +43,7 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
 
         // when
         val result = runBlocking {
-            liveChartDownloader.downloadSuspendable(id = id.toAnimeId(), onDeadEntry = { shouldNotBeInvoked() })
+            liveChartDownloader.download(id = id.toAnimeId(), onDeadEntry = { shouldNotBeInvoked() })
         }
 
         // then
@@ -77,7 +77,7 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
 
         // when
         val result = runBlocking {
-            livechartDownloader.downloadSuspendable(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
+            livechartDownloader.download(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
         }
 
         // then
@@ -112,7 +112,7 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
 
         // when
         val result = runBlocking {
-            livechartDownloader.downloadSuspendable(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
+            livechartDownloader.download(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
         }
 
         // then
@@ -145,7 +145,7 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
 
         // when
         val result = exceptionExpected<IllegalStateException> {
-            livechartDownloader.downloadSuspendable(id.toAnimeId()) { shouldNotBeInvoked() }
+            livechartDownloader.download(id.toAnimeId()) { shouldNotBeInvoked() }
         }
 
         // then
@@ -178,7 +178,7 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
 
         // when
         val result = exceptionExpected<IllegalStateException> {
-            livechartDownloader.downloadSuspendable(id = id.toAnimeId(), onDeadEntry = { shouldNotBeInvoked() })
+            livechartDownloader.download(id = id.toAnimeId(), onDeadEntry = { shouldNotBeInvoked() })
         }
 
         // then
