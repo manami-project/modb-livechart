@@ -1,13 +1,12 @@
 package io.github.manamiproject.modb.livechart
 
 import io.github.manamiproject.modb.core.extensions.writeToFile
-import io.github.manamiproject.modb.core.extensions.writeToFile
 import io.github.manamiproject.modb.test.testResource
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Path
 import java.nio.file.Paths
 
-fun main() {
+internal fun main() {
     val downloader = LivechartDownloader(LivechartConfig)
     
     runBlocking {
