@@ -8,8 +8,8 @@ import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
+import io.github.manamiproject.modb.core.parseHtml
 import kotlinx.coroutines.withContext
-import org.jsoup.Jsoup
 
 /**
  * Downloads anime data from livechart.me
@@ -32,7 +32,10 @@ public class LivechartDownloader(
 
         check(response.body.isNotBlank()) { "Response body was blank for [livechartId=$id] with response code [${response.code}]" }
 
-        val title = Jsoup.parse(response.body).select("title").text().trim()
+        val title = parseHtml(response.body) { document ->
+            document.select("title").text().trim()
+        }
+
         if (title.startsWith("Excluded from the LiveChart.me Database")) {
             onDeadEntry.invoke(id)
             return@withContext EMPTY

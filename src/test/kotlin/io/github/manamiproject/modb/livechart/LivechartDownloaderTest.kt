@@ -11,113 +11,114 @@ import io.github.manamiproject.modb.core.extensions.toAnimeId
 import io.github.manamiproject.modb.test.*
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import kotlin.test.Test
 import java.net.URI
 
 internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by WireMockServerCreator() {
 
     @Test
     fun `successfully load an entry`() {
-        // given
-        val id = 1535
+        runBlocking {
+            // given
+            val id = 1535
 
-        val testLivechartConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
-            override fun hostname(): Hostname = "localhost"
-            override fun buildAnimeLink(id: AnimeId): URI = URI("http://localhost:$port/anime/$id")
-            override fun buildDataDownloadLink(id: String): URI = buildAnimeLink(id)
-            override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
-        }
+            val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                override fun hostname(): Hostname = "localhost"
+                override fun buildAnimeLink(id: AnimeId): URI = URI("http://localhost:$port/anime/$id")
+                override fun buildDataDownloadLink(id: String): URI = buildAnimeLink(id)
+                override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
+            }
 
-        val responseBody = "<html><head/><body></body></html>"
+            val responseBody = "<html><head/><body></body></html>"
 
-        serverInstance.stubFor(
-            get(urlPathEqualTo("/anime/$id")).willReturn(
-                aResponse()
-                    .withHeader("Content-Type", "text/html")
-                    .withStatus(200)
-                    .withBody(responseBody)
+            serverInstance.stubFor(
+                get(urlPathEqualTo("/anime/$id")).willReturn(
+                    aResponse()
+                        .withHeader("Content-Type", "text/html")
+                        .withStatus(200)
+                        .withBody(responseBody)
+                )
             )
-        )
 
-        val liveChartDownloader = LivechartDownloader(testLivechartConfig)
+            val liveChartDownloader = LivechartDownloader(testLivechartConfig)
 
-        // when
-        val result = runBlocking {
-            liveChartDownloader.download(id = id.toAnimeId(), onDeadEntry = { shouldNotBeInvoked() })
+            // when
+            val result = liveChartDownloader.download(id = id.toAnimeId(), onDeadEntry = { shouldNotBeInvoked() })
+
+            // then
+            assertThat(result).isEqualTo(responseBody)
         }
-
-        // then
-        assertThat(result).isEqualTo(responseBody)
     }
 
     @Test
     fun `responding 404 indicating dead entry - add to dead entry list and return empty string`() {
-        // given
-        val id = 1535
-        var hasDeadEntryBeenInvoked = false
+        runBlocking {
+            // given
+            val id = 1535
+            var hasDeadEntryBeenInvoked = false
 
-        val testLivechartConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
-            override fun hostname(): Hostname = "localhost"
-            override fun buildAnimeLink(id: AnimeId): URI = URI("http://localhost:$port/anime/$id")
-            override fun buildDataDownloadLink(id: String): URI = buildAnimeLink(id)
-            override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
+            val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                override fun hostname(): Hostname = "localhost"
+                override fun buildAnimeLink(id: AnimeId): URI = URI("http://localhost:$port/anime/$id")
+                override fun buildDataDownloadLink(id: String): URI = buildAnimeLink(id)
+                override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
+            }
+
+            serverInstance.stubFor(
+                get(urlPathEqualTo("/anime/$id"))
+                    .willReturn(
+                        aResponse()
+                            .withHeader("Content-Type", "text/html")
+                            .withStatus(404)
+                            .withBody("<html><head><title>Page Not Found | LiveChart.me</title><body></body></html>")
+                    )
+            )
+
+            val livechartDownloader = LivechartDownloader(testLivechartConfig)
+
+            // when
+            val result =
+                livechartDownloader.download(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
+
+            // then
+            assertThat(hasDeadEntryBeenInvoked).isTrue()
+            assertThat(result).isBlank()
         }
-
-        serverInstance.stubFor(
-            get(urlPathEqualTo("/anime/$id"))
-                .willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", "text/html")
-                        .withStatus(404)
-                        .withBody("<html><head><title>Page Not Found | LiveChart.me</title><body></body></html>")
-                )
-        )
-
-        val livechartDownloader = LivechartDownloader(testLivechartConfig)
-
-        // when
-        val result = runBlocking {
-            livechartDownloader.download(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
-        }
-
-        // then
-        assertThat(hasDeadEntryBeenInvoked).isTrue()
-        assertThat(result).isBlank()
     }
 
     @Test
     fun `excluded from database page - add to dead entry list and return empty string`() {
-        // given
-        val id = 1535
-        var hasDeadEntryBeenInvoked = false
+        runBlocking {
+            // given
+            val id = 1535
+            var hasDeadEntryBeenInvoked = false
 
-        val testLivechartConfig = object: MetaDataProviderConfig by MetaDataProviderTestConfig {
-            override fun hostname(): Hostname = "localhost"
-            override fun buildAnimeLink(id: AnimeId): URI = URI("http://localhost:$port/anime/$id")
-            override fun buildDataDownloadLink(id: String): URI = buildAnimeLink(id)
-            override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
+            val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                override fun hostname(): Hostname = "localhost"
+                override fun buildAnimeLink(id: AnimeId): URI = URI("http://localhost:$port/anime/$id")
+                override fun buildDataDownloadLink(id: String): URI = buildAnimeLink(id)
+                override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
+            }
+
+            serverInstance.stubFor(
+                get(urlPathEqualTo("/anime/$id"))
+                    .willReturn(
+                        aResponse()
+                            .withHeader("Content-Type", "text/html")
+                            .withStatus(200)
+                            .withBody(loadTestResource("downloader_tests/excluded_from_database.html"))
+                    )
+            )
+
+            val livechartDownloader = LivechartDownloader(testLivechartConfig)
+
+            // when
+            val result = livechartDownloader.download(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
+
+            // then
+            assertThat(hasDeadEntryBeenInvoked).isTrue()
+            assertThat(result).isBlank()
         }
-
-        serverInstance.stubFor(
-            get(urlPathEqualTo("/anime/$id"))
-                .willReturn(
-                    aResponse()
-                        .withHeader("Content-Type", "text/html")
-                        .withStatus(200)
-                        .withBody(loadTestResource("downloader_tests/excluded_from_database.html"))
-                )
-        )
-
-        val livechartDownloader = LivechartDownloader(testLivechartConfig)
-
-        // when
-        val result = runBlocking {
-            livechartDownloader.download(id = id.toAnimeId(), onDeadEntry = { hasDeadEntryBeenInvoked = true })
-        }
-
-        // then
-        assertThat(hasDeadEntryBeenInvoked).isTrue()
-        assertThat(result).isBlank()
     }
 
     @Test
