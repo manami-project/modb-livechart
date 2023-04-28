@@ -273,7 +273,7 @@ internal class LivechartConverterTest {
         }
 
         @Test
-        fun `currently running`() {
+        fun `number episodes unknown, but currently running`() {
             runBlocking {
                 // given
                 val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -282,7 +282,7 @@ internal class LivechartConverterTest {
                     override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/episodes/currently_running.html")
+                val testFile = loadTestResource("file_converter_tests/episodes/number_of_episodes_unknown_but_currently_running.html")
 
                 val converter = LivechartConverter(
                     config = testLivechartConfig,
@@ -292,7 +292,31 @@ internal class LivechartConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.episodes).isEqualTo(1008)
+                assertThat(result.episodes).isEqualTo(1081)
+            }
+        }
+
+        @Test
+        fun `number episodes known and currently running`() {
+            runBlocking {
+                // given
+                val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                    override fun buildAnimeLink(id: AnimeId): URI = LivechartConfig.buildAnimeLink(id)
+                    override fun buildDataDownloadLink(id: String): URI = LivechartConfig.buildDataDownloadLink(id)
+                    override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
+                }
+
+                val testFile = loadTestResource("file_converter_tests/episodes/number_of_episodes_known_and_running.html")
+
+                val converter = LivechartConverter(
+                    config = testLivechartConfig,
+                )
+
+                // when
+                val result = converter.convert(testFile)
+
+                // then
+                assertThat(result.episodes).isEqualTo(11)
             }
         }
     }
@@ -988,7 +1012,7 @@ internal class LivechartConverterTest {
         inner class YearOfPremiereTests {
 
             @Test
-            fun `exact date is given`() {
+            fun `season set completely`() {
                 runBlocking {
                     // given
                     val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -998,7 +1022,7 @@ internal class LivechartConverterTest {
                     }
 
                     val testFile =
-                        loadTestResource("file_converter_tests/anime_season/year_of_premiere/exact_date.html")
+                        loadTestResource("file_converter_tests/anime_season/year_of_premiere/season_set.html")
 
                     val converter = LivechartConverter(
                         config = testLivechartConfig,
@@ -1008,12 +1032,12 @@ internal class LivechartConverterTest {
                     val result = converter.convert(testFile)
 
                     // then
-                    assertThat(result.animeSeason.year).isEqualTo(2021)
+                    assertThat(result.animeSeason.year).isEqualTo(2023)
                 }
             }
 
             @Test
-            fun `premiere in season format`() {
+            fun `season is not set, but premiere`() {
                 runBlocking {
                     // given
                     val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -1022,7 +1046,8 @@ internal class LivechartConverterTest {
                         override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/season.html")
+                    val testFile =
+                        loadTestResource("file_converter_tests/anime_season/year_of_premiere/season_tba_premiere_set.html")
 
                     val converter = LivechartConverter(
                         config = testLivechartConfig,
@@ -1032,12 +1057,12 @@ internal class LivechartConverterTest {
                     val result = converter.convert(testFile)
 
                     // then
-                    assertThat(result.animeSeason.year).isEqualTo(2022)
+                    assertThat(result.animeSeason.year).isEqualTo(2023)
                 }
             }
 
             @Test
-            fun `premiere is undefined`() {
+            fun `both season and premiere are not set`() {
                 runBlocking {
                     // given
                     val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -1046,7 +1071,8 @@ internal class LivechartConverterTest {
                         override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
                     }
 
-                    val testFile = loadTestResource("file_converter_tests/anime_season/year_of_premiere/undefined.html")
+                    val testFile =
+                        loadTestResource("file_converter_tests/anime_season/year_of_premiere/season_tba_premiere_not_set.html")
 
                     val converter = LivechartConverter(
                         config = testLivechartConfig,
@@ -1057,31 +1083,6 @@ internal class LivechartConverterTest {
 
                     // then
                     assertThat(result.animeSeason.year).isZero()
-                }
-            }
-
-            @Test
-            fun `link would indicate tba which means undefined, but the text of the link contains a year`() {
-                runBlocking {
-                    // given
-                    val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                        override fun buildAnimeLink(id: AnimeId): URI = LivechartConfig.buildAnimeLink(id)
-                        override fun buildDataDownloadLink(id: String): URI = LivechartConfig.buildDataDownloadLink(id)
-                        override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
-                    }
-
-                    val testFile =
-                        loadTestResource("file_converter_tests/anime_season/year_of_premiere/link_is_tba_but_text_contains_year.html")
-
-                    val converter = LivechartConverter(
-                        config = testLivechartConfig,
-                    )
-
-                    // when
-                    val result = converter.convert(testFile)
-
-                    // then
-                    assertThat(result.animeSeason.year).isEqualTo(2022)
                 }
             }
         }
@@ -1115,7 +1116,7 @@ internal class LivechartConverterTest {
         }
 
         @Test
-        fun `status is upcoming - start date is unknown`() {
+        fun `status is upcoming`() {
             runBlocking {
                 // given
                 val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
@@ -1124,31 +1125,7 @@ internal class LivechartConverterTest {
                     override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
                 }
 
-                val testFile = loadTestResource("file_converter_tests/status/upcoming_unknown_date.html")
-
-                val converter = LivechartConverter(
-                    config = testLivechartConfig,
-                )
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.status).isEqualTo(UPCOMING)
-            }
-        }
-
-        @Test
-        fun `status is upcoming - start date is known`() {
-            runBlocking {
-                // given
-                val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = LivechartConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = LivechartConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
-                }
-
-                val testFile = loadTestResource("file_converter_tests/status/upcoming_known_date.html")
+                val testFile = loadTestResource("file_converter_tests/status/no_yet_released.html")
 
                 val converter = LivechartConverter(
                     config = testLivechartConfig,

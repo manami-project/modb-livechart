@@ -13,29 +13,29 @@ internal fun main() {
         downloader.download("9818").writeToFile(resourceFile("file_converter_tests/anime_season/season/fall.html"))
         downloader.download("9649").writeToFile(resourceFile("file_converter_tests/anime_season/season/spring.html"))
         downloader.download("9627").writeToFile(resourceFile("file_converter_tests/anime_season/season/summer.html"))
-        downloader.download("9579").writeToFile(resourceFile("file_converter_tests/anime_season/season/undefined.html"))
+        downloader.download("10449").writeToFile(resourceFile("file_converter_tests/anime_season/season/undefined.html"))
         downloader.download("8230").writeToFile(resourceFile("file_converter_tests/anime_season/season/winter.html"))
     
-        downloader.download("9762").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/exact_date.html"))
-        downloader.download("9855").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/link_is_tba_but_text_contains_year.html"))
-        downloader.download("10510").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/season.html"))
-        downloader.download("10850").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/undefined.html"))
-    
+        downloader.download("11084").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/season_set.html"))
+        downloader.download("11988").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/season_tba_premiere_not_set.html"))
+        downloader.download("11758").writeToFile(resourceFile("file_converter_tests/anime_season/year_of_premiere/season_tba_premiere_set.html"))
+
         downloader.download("2026").writeToFile(resourceFile("file_converter_tests/duration/1_hour.html"))
         downloader.download("5937").writeToFile(resourceFile("file_converter_tests/duration/1_hour_11_min.html"))
         downloader.download("986").writeToFile(resourceFile("file_converter_tests/duration/2_hours.html"))
         downloader.download("5926").writeToFile(resourceFile("file_converter_tests/duration/2_hours_15_minutes.html"))
         downloader.download("6767").writeToFile(resourceFile("file_converter_tests/duration/10_min.html"))
         downloader.download("10429").writeToFile(resourceFile("file_converter_tests/duration/30_sec.html"))
-        downloader.download("10368").writeToFile(resourceFile("file_converter_tests/duration/unknown.html"))
+        downloader.download("11982").writeToFile(resourceFile("file_converter_tests/duration/unknown.html"))
     
         downloader.download("1855").writeToFile(resourceFile("file_converter_tests/episodes/1.html"))
         downloader.download("6239").writeToFile(resourceFile("file_converter_tests/episodes/10.html"))
         downloader.download("8817").writeToFile(resourceFile("file_converter_tests/episodes/100.html"))
-        downloader.download("321").writeToFile(resourceFile("file_converter_tests/episodes/currently_running.html"))
-        downloader.download("10474").writeToFile(resourceFile("file_converter_tests/episodes/unknown.html"))
+        downloader.download("11247").writeToFile(resourceFile("file_converter_tests/episodes/number_of_episodes_known_and_running.html"))
+        downloader.download("319").writeToFile(resourceFile("file_converter_tests/episodes/number_of_episodes_unknown_but_currently_running.html"))
+        downloader.download("11514").writeToFile(resourceFile("file_converter_tests/episodes/unknown.html"))
     
-        downloader.download("10877").writeToFile(resourceFile("file_converter_tests/picture_and_thumbnail/neither_picture_nor_thumbnail.html"))
+        downloader.download("2301").writeToFile(resourceFile("file_converter_tests/picture_and_thumbnail/neither_picture_nor_thumbnail.html"))
         downloader.download("3437").writeToFile(resourceFile("file_converter_tests/picture_and_thumbnail/picture_and_thumbnail_available.html"))
     
         downloader.download("3366").writeToFile(resourceFile("file_converter_tests/related_anime/multiple_relations_no_scrolling.html"))
@@ -46,10 +46,9 @@ internal fun main() {
         downloader.download("3437").writeToFile(resourceFile("file_converter_tests/sources/3437.html"))
     
         downloader.download("9818").writeToFile(resourceFile("file_converter_tests/status/finished.html"))
+        downloader.download("10384").writeToFile(resourceFile("file_converter_tests/status/no_yet_released.html"))
         downloader.download("321").writeToFile(resourceFile("file_converter_tests/status/ongoing.html"))
-        downloader.download("10487").writeToFile(resourceFile("file_converter_tests/status/upcoming_known_date.html"))
-        downloader.download("11018").writeToFile(resourceFile("file_converter_tests/status/upcoming_unknown_date.html"))
-    
+
         downloader.download("8081").writeToFile(resourceFile("file_converter_tests/synonyms/encoded_special_chars.html"))
         downloader.download("2805").writeToFile(resourceFile("file_converter_tests/synonyms/multiple_synonyms.html"))
         downloader.download("10484").writeToFile(resourceFile("file_converter_tests/synonyms/no_synonyms.html"))
@@ -67,7 +66,7 @@ internal fun main() {
         downloader.download("9548").writeToFile(resourceFile("file_converter_tests/type/special.html"))
         downloader.download("3437").writeToFile(resourceFile("file_converter_tests/type/tv.html"))
         downloader.download("10429").writeToFile(resourceFile("file_converter_tests/type/tv_short.html"))
-        downloader.download("10941").writeToFile(resourceFile("file_converter_tests/type/unknown.html"))
+        downloader.download("11982").writeToFile(resourceFile("file_converter_tests/type/unknown.html"))
         downloader.download("8110").writeToFile(resourceFile("file_converter_tests/type/web.html"))
         downloader.download("8695").writeToFile(resourceFile("file_converter_tests/type/web_short.html"))
     }

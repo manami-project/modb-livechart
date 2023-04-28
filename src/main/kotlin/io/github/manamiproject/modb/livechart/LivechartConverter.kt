@@ -89,6 +89,10 @@ public class LivechartConverter(
                 .trim()
                 .toIntOrNull()
                 ?: 0
+
+            if (episodes != 0 ) {
+                episodes -= 1
+            }
         }
 
         return when {
@@ -139,68 +143,58 @@ public class LivechartConverter(
     }
 
     private fun extractStatus(document: Document): Anime.Status {
-        val episodesFromCountdownBox = document.select("div[class=callout info-bar countdown-bar inactive]")
-            .select("div[class=info-bar-cell info-bar-label]")
-            .text()
-            .replace("EP", EMPTY)
-            .trim()
-            .toIntOrNull()
-            ?: 0
-
-        val isPremiereTba = document.select("div[class=section-heading]:matchesOwn(Premiere)")
+        val statusString = document.select("div[class=section-heading]:matchesOwn(Status)")
             .next()
-            .select("a")
-            .attr("href")
-            .contains("tba")
+            .text()
+            .trim()
+            .lowercase()
 
-        return when {
-            isPremiereTba && episodesFromCountdownBox == 0 -> UPCOMING
-            episodesFromCountdownBox == 1 -> UPCOMING
-            episodesFromCountdownBox > 1 -> ONGOING
-            !isPremiereTba && episodesFromCountdownBox == 0 -> FINISHED
+        return when (statusString){
+            "not yet released" -> UPCOMING
+            "releasing" -> ONGOING
+            "finished" -> FINISHED
             else -> Anime.Status.UNKNOWN
         }
     }
 
     private fun extractDuration(document: Document): Duration {
-        val value = document.select("div[class=info-bar anime-meta-bar]")
+        val durationString = document.select("div[class=info-bar anime-meta-bar]")
             .select("div:matchesOwn(Run time)")
             .next()
             .text()
             .trim()
 
-        var seconds = 0
-        Regex("([0-9]+ [aA-zZ]+)+")
-            .findAll(value)
+        val seconds = Regex("([0-9]+ ?[aA-zZ]+)+")
+            .findAll(durationString)
             .map { it.value }
-            .map { it.split(' ') }
-            .map { it[0].trim().toInt() to it[1].trim() }
-            .forEach {
-                seconds += when(it.second) {
-                    "hr" -> it.first * 3600
-                    "min" -> it.first * 60
-                    "sec" -> it.first
+            .map {
+                val value = (Regex("[0-9]+").find(it)?.value?.trim() ?: "0").ifBlank { "0" }.toIntOrNull() ?: 0
+                val unit = Regex("[a-z]+").find(it)?.value?.trim()?.lowercase() ?: ""
+                value to unit
+            }
+            .map {
+                when(it.second) {
+                    "hr", "h" -> it.first * 3600
+                    "min", "m" -> it.first * 60
+                    "sec", "s" -> it.first
                     else -> throw IllegalStateException("Unknown unit [${it.second}]")
                 }
             }
+            .sum()
 
         return Duration(seconds, SECONDS)
     }
 
     private fun extractAnimeSeason(document: Document): AnimeSeason {
-        val linkContainingPremiere = document.select("div[class=section-heading]:matchesOwn(Premiere)")
+        val splitSeasonString = document.select("div[class=section-heading]:matchesOwn(Season)")
             .next()
             .select("a")
+            .text()
+            .split(' ')
 
-        val identifier = Regex("[aA-zZ]+-[0-9]{4}")
-        val premiere = linkContainingPremiere.attr("href")
-            .split('/')
-            .find { identifier.matches(it) }
-            ?.split('-')
-            ?.let { it[0].lowercase() to it[1] }
-            ?: (EMPTY to EMPTY)
+        val seasonString = splitSeasonString.first().trim().lowercase()
 
-        val season = when(premiere.first) {
+        val season = when(seasonString) {
             "winter" -> WINTER
             "spring" -> SPRING
             "summer" -> SUMMER
@@ -208,15 +202,13 @@ public class LivechartConverter(
             else -> UNDEFINED
         }
 
-        var year = premiere.second.ifBlank { "0" }.toInt()
-
-        if (year == 0) {
-            val premiereText = linkContainingPremiere.text().trim()
-            val isYear = premiereText.matches(Regex("[0-9]{4}"))
-
-            if(isYear) {
-                year =  premiereText.toInt()
-            }
+        val year = if (splitSeasonString.size == 2) {
+            splitSeasonString[1].trim().ifBlank { "0" }.toIntOrNull() ?: 0
+        } else {
+            val linkContainingPremiere = document.select("div[class=section-heading]:matchesOwn(Premiere)")
+                .next()
+                .text()
+            (Regex("[0-9]{4}").find(linkContainingPremiere)?.value?.trim() ?: "0").ifBlank { "0" }.toIntOrNull() ?: 0
         }
 
         return AnimeSeason(
