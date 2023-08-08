@@ -7,6 +7,7 @@ import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.extensions.EMPTY
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpClient
+import io.github.manamiproject.modb.core.httpclient.HttpProtocol.HTTP_1_1
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
 import io.github.manamiproject.modb.core.parseHtml
 import kotlinx.coroutines.withContext
@@ -19,7 +20,10 @@ import kotlinx.coroutines.withContext
  */
 public class LivechartDownloader(
     private val config: MetaDataProviderConfig = LivechartConfig,
-    private val httpClient: HttpClient = DefaultHttpClient(isTestContext = config.isTestContext()),
+    private val httpClient: HttpClient = DefaultHttpClient(
+        protocols = listOf(HTTP_1_1),
+        isTestContext = config.isTestContext(),
+    ),
 ): Downloader {
 
     override suspend fun download(id: AnimeId, onDeadEntry: suspend (AnimeId) -> Unit): String = withContext(LIMITED_NETWORK) {

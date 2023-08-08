@@ -292,7 +292,7 @@ internal class LivechartConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.episodes).isEqualTo(1081)
+                assertThat(result.episodes).isEqualTo(1093)
             }
         }
 
@@ -316,7 +316,7 @@ internal class LivechartConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.episodes).isEqualTo(11)
+                assertThat(result.episodes).isEqualTo(12)
             }
         }
     }
@@ -401,8 +401,8 @@ internal class LivechartConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.picture).isEqualTo(URI("https://u.livechart.me/anime/3437/poster_image/ea9acd1ccea844fd9c4debde5e8e631e.png?style=large&format=jpg"))
-                assertThat(result.thumbnail).isEqualTo(URI("https://u.livechart.me/anime/3437/poster_image/ea9acd1ccea844fd9c4debde5e8e631e.png?style=small&format=jpg"))
+                assertThat(result.picture).isEqualTo(URI("https://u.livechart.me/anime/3437/poster_image/ea9acd1ccea844fd9c4debde5e8e631e.png/large.jpg"))
+                assertThat(result.thumbnail).isEqualTo(URI("https://u.livechart.me/anime/3437/poster_image/ea9acd1ccea844fd9c4debde5e8e631e.png/small.jpg"))
             }
         }
     }
@@ -431,30 +431,6 @@ internal class LivechartConverterTest {
 
                 // then
                 assertThat(result.type).isEqualTo(TV)
-            }
-        }
-
-        @Test
-        fun `Questionmark is mapped to 'UNKNOWN'`() {
-            runBlocking {
-                // given
-                val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
-                    override fun buildAnimeLink(id: AnimeId): URI = LivechartConfig.buildAnimeLink(id)
-                    override fun buildDataDownloadLink(id: String): URI = LivechartConfig.buildDataDownloadLink(id)
-                    override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
-                }
-
-                val testFile = loadTestResource("file_converter_tests/type/questionmark.html")
-
-                val converter = LivechartConverter(
-                    config = testLivechartConfig,
-                )
-
-                // when
-                val result = converter.convert(testFile)
-
-                // then
-                assertThat(result.type).isEqualTo(UNKNOWN)
             }
         }
 
@@ -824,10 +800,11 @@ internal class LivechartConverterTest {
                 // then
                 assertThat(result.tags).containsExactly(
                     "comedy",
-                    "demons",
                     "fantasy",
-                    "romance",
+                    "mythology",
+                    "romantic subtext",
                     "supernatural",
+                    "workplace",
                 )
             }
         }
@@ -852,7 +829,7 @@ internal class LivechartConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.tags).containsExactly("comedy")
+                assertThat(result.tags).containsExactly("cgi")
             }
         }
 

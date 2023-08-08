@@ -67,13 +67,16 @@ public class LivechartConverter(
 
         // regular value in data table
         if (episodes == 0) {
-            val episodesValue = document.select("div[class=info-bar anime-meta-bar]")
-                .select("div:matchesOwn(Episodes)")
-                .next()
-                .text()
-                .trim()
+            val episodesValue = document.select("div:matchesOwn(^Episodes\$)").takeIf { it.size > 0 }
+                ?.parents()?.get(0)?.takeIf { it.childrenSize() > 1 }
+                ?.child(1)
+                ?.text()
+                ?.trim()
+                ?.split('/')
+                ?.last()
+                ?: "?"
 
-            if (episodesValue != "?") {
+            if (episodesValue != "?" && episodesValue != "-") {
                 episodes = episodesValue.toIntOrNull() ?: 0
             } else {
                 isTableValueUnknown = true
@@ -82,8 +85,8 @@ public class LivechartConverter(
 
         // current episode from table if the anime is ongoing
         if (episodes == 0) {
-            episodes = document.select("div[class=callout info-bar countdown-bar inactive]")
-                .select("div[class=info-bar-cell info-bar-label]")
+            episodes = document.select("div[data-controller=countdown-bar]")
+                .select("div:matchesOwn(EP\\d+)")
                 .text()
                 .replace("EP", EMPTY)
                 .trim()
@@ -96,17 +99,15 @@ public class LivechartConverter(
         }
 
         return when {
-            episodes == 0 && isTableValueUnknown -> 0
-            episodes == 0 && !isTableValueUnknown -> 1
+            episodes == 0 && isTableValueUnknown -> 1
             else -> episodes
         }
     }
 
     private fun extractType(document: Document): Anime.Type {
-        val value = document.select("div[class=info-bar anime-meta-bar]")
-            .select("div:matchesOwn(Format)")
-            .next()
-            .text()
+        val value = document.select("div:matchesOwn(^Format\$)")
+            .parents()[0]
+            .ownText()
             .trim()
 
         return when(value) {
@@ -129,7 +130,7 @@ public class LivechartConverter(
             document.select("meta[property=og:image]").attr("content").trim()
         }
 
-        if (!value.contains(LARGE_PICTURE_INDICATOR)) {
+        if (!value.endsWith(LARGE_PICTURE_INDICATOR)) {
             value = NO_PIC
         }
 
@@ -143,9 +144,9 @@ public class LivechartConverter(
     }
 
     private fun extractStatus(document: Document): Anime.Status {
-        val statusString = document.select("div[class=section-heading]:matchesOwn(Status)")
-            .next()
-            .text()
+        val statusString = document.select("div:matchesOwn(^Status\$)")
+            .parents()[0]
+            .ownText()
             .trim()
             .lowercase()
 
@@ -158,10 +159,9 @@ public class LivechartConverter(
     }
 
     private fun extractDuration(document: Document): Duration {
-        val durationString = document.select("div[class=info-bar anime-meta-bar]")
-            .select("div:matchesOwn(Run time)")
-            .next()
-            .text()
+        val durationString = document.select("div:matchesOwn(^Run time\$)")
+            .parents()[0]
+            .ownText()
             .trim()
 
         val seconds = Regex("([0-9]+ ?[aA-zZ]+)+")
@@ -186,8 +186,8 @@ public class LivechartConverter(
     }
 
     private fun extractAnimeSeason(document: Document): AnimeSeason {
-        val splitSeasonString = document.select("div[class=section-heading]:matchesOwn(Season)")
-            .next()
+        val splitSeasonString = document.select("div:matchesOwn(^Season\$)")
+            .parents()[0]
             .select("a")
             .text()
             .split(' ')
@@ -236,7 +236,7 @@ public class LivechartConverter(
     }
 
     private fun extractRelatedAnime(document: Document): Collection<URI> {
-        return document.select("article[class=compact-anime-card] > a")
+        return document.select("div[data-controller=carousel] > div > article > a")
             .map { it.attr("href") }
             .map { it.replace("/anime/", EMPTY) }
             .map { config.buildAnimeLink(it) }
@@ -246,12 +246,11 @@ public class LivechartConverter(
         val tags: MutableSet<String> = jsonData.genre.toMutableSet().ifEmpty { mutableSetOf() }
 
         if (tags.isEmpty()) {
-            document.select("div[class=section-heading]")
-                .select("div:matchesOwn(Tags)")
+            document.select("div:matchesOwn(^Tags\$)")
                 .next()
-                .select("li > a")
+                .select("a[data-anime-details-target=tagChip]")
                 .textNodes()
-                .map { it.text() }
+                .map { it.text().trim() }
                 .forEach {
                     tags.add(it)
                 }
@@ -261,8 +260,8 @@ public class LivechartConverter(
     }
 
     private companion object {
-        private const val LARGE_PICTURE_INDICATOR = "style=large"
-        private const val SMALL_PICTURE_INDICATOR = "style=small"
+        private const val LARGE_PICTURE_INDICATOR = "large.jpg"
+        private const val SMALL_PICTURE_INDICATOR = "small.jpg"
         private const val NO_PIC = "https://cdn.myanimelist.net/images/qm_50.gif"
     }
 }
