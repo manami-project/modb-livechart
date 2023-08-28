@@ -21,7 +21,7 @@ import kotlinx.coroutines.withContext
 public class LivechartDownloader(
     private val config: MetaDataProviderConfig = LivechartConfig,
     private val httpClient: HttpClient = DefaultHttpClient(
-        protocols = listOf(HTTP_1_1),
+        protocols = mutableListOf(HTTP_1_1),
         isTestContext = config.isTestContext(),
     ),
 ): Downloader {

@@ -170,7 +170,7 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
                 .willReturn(
                     aResponse()
                         .withHeader("Content-Type", "text/html")
-                        .withStatus(502)
+                        .withStatus(400)
                         .withBody("<html></html>")
                 )
         )
@@ -183,6 +183,6 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
         }
 
         // then
-        assertThat(result).hasMessage("Unable to determine the correct case for [livechartId=$id], [responseCode=502]")
+        assertThat(result).hasMessage("Unable to determine the correct case for [livechartId=$id], [responseCode=400]")
     }
 }
