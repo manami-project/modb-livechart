@@ -117,9 +117,9 @@ internal fun main() {
         downloader.download("8110").writeToFile(resourceFile("file_converter_tests/type/web.html"))
         delay(4000)
         downloader.download("8695").writeToFile(resourceFile("file_converter_tests/type/web_short.html"))
-    }
 
-    println("done")
+        println("done")
+    }
 }
 
 private fun resourceFile(file: String): Path {
