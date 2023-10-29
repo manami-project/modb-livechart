@@ -37,7 +37,7 @@ dependencies {
     api("io.github.manamiproject:modb-core:9.0.1")
 
     implementation(platform(kotlin("bom")))
-    implementation("org.apache.commons:commons-text:1.10.0")
+    implementation("org.apache.commons:commons-text:1.11.0")
 
     testImplementation("ch.qos.logback:logback-classic:1.4.11")
     testImplementation("io.github.manamiproject:modb-test:1.4.9")
