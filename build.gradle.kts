@@ -1,3 +1,5 @@
+val jvmTarget = "21"
+
 plugins {
     kotlin("jvm") version "1.9.20"
     `maven-publish`
@@ -45,12 +47,12 @@ dependencies {
 
 kotlin {
     explicitApi()
-    jvmToolchain(Versions.JVM_TARGET.toInt())
+    jvmToolchain(jvmTarget.toInt())
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     kotlinOptions {
-        jvmTarget = Versions.JVM_TARGET
+        jvmTarget = jvmTarget
     }
 }
 
@@ -126,10 +128,6 @@ tasks.jacocoTestReport {
         xml.outputLocation.set(file("${layout.buildDirectory}/reports/jacoco/test/jacocoFullReport.xml"))
     }
     dependsOn(allprojects.map { it.tasks.named<Test>("test") })
-}
-
-object Versions {
-    const val JVM_TARGET = "17"
 }
 
 fun parameter(name: String, default: String = ""): String {
