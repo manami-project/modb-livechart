@@ -138,9 +138,11 @@ public class LivechartConverter(
     }
 
     private fun findThumbnail(uri: URI): URI {
-        val value = uri.toString().replace(LARGE_PICTURE_INDICATOR, SMALL_PICTURE_INDICATOR)
-
-        return URI(value)
+        return if (uri.toString() == NO_PIC) {
+            URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png")
+        } else {
+            URI(uri.toString().replace(LARGE_PICTURE_INDICATOR, SMALL_PICTURE_INDICATOR))
+        }
     }
 
     private fun extractStatus(document: Document): Anime.Status {
@@ -262,7 +264,7 @@ public class LivechartConverter(
     private companion object {
         private const val LARGE_PICTURE_INDICATOR = "large.jpg"
         private const val SMALL_PICTURE_INDICATOR = "small.jpg"
-        private const val NO_PIC = "https://cdn.myanimelist.net/images/qm_50.gif"
+        private const val NO_PIC = "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png"
     }
 }
 
