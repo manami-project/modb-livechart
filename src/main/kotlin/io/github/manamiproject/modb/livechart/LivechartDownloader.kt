@@ -34,9 +34,9 @@ public class LivechartDownloader(
             headers = mapOf("host" to listOf("www.${config.hostname()}")),
         )
 
-        check(response.body.isNotBlank()) { "Response body was blank for [livechartId=$id] with response code [${response.code}]" }
+        check(response.bodyAsText.isNotBlank()) { "Response body was blank for [livechartId=$id] with response code [${response.code}]" }
 
-        val title = parseHtml(response.body) { document ->
+        val title = parseHtml(response.bodyAsText) { document ->
             document.select("title").text().trim()
         }
 
@@ -46,7 +46,7 @@ public class LivechartDownloader(
         }
 
         return@withContext when(response.code) {
-            200 -> response.body
+            200 -> response.bodyAsText
             404 -> {
                 onDeadEntry.invoke(id)
                 EMPTY
