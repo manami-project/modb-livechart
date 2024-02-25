@@ -798,7 +798,7 @@ internal class LivechartConverterTest {
                 val result = converter.convert(testFile)
 
                 // then
-                assertThat(result.tags).containsExactly(
+                assertThat(result.tags).containsExactlyInAnyOrder(
                     "comedy",
                     "fantasy",
                     "mythology",

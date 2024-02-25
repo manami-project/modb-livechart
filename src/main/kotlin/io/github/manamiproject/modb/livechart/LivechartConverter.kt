@@ -1,6 +1,6 @@
 package io.github.manamiproject.modb.livechart
 
-import io.github.manamiproject.modb.core.Json
+import io.github.manamiproject.modb.core.json.Json
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
@@ -47,7 +47,7 @@ public class LivechartConverter(
         ).apply {
             addSources(sources)
             addSynonyms(extractSynonyms(jsonData))
-            addRelations(extractRelatedAnime(htmlDocument))
+            addRelatedAnime(extractRelatedAnime(htmlDocument))
             addTags(extractTags(jsonData, htmlDocument))
         }
     }
