@@ -5,11 +5,12 @@ import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_NETWORK
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extractor.DataExtractor
+import io.github.manamiproject.modb.core.extractor.XmlDataExtractor
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpClient
 import io.github.manamiproject.modb.core.httpclient.HttpProtocol.HTTP_1_1
 import io.github.manamiproject.modb.core.logging.LoggerDelegate
-import io.github.manamiproject.modb.core.parseHtml
 import kotlinx.coroutines.withContext
 
 /**
@@ -20,6 +21,7 @@ import kotlinx.coroutines.withContext
  */
 public class LivechartDownloader(
     private val config: MetaDataProviderConfig = LivechartConfig,
+    private val extractor: DataExtractor = XmlDataExtractor,
     private val httpClient: HttpClient = DefaultHttpClient(
         protocols = mutableListOf(HTTP_1_1),
         isTestContext = config.isTestContext(),
@@ -36,11 +38,11 @@ public class LivechartDownloader(
 
         check(response.bodyAsText.isNotBlank()) { "Response body was blank for [livechartId=$id] with response code [${response.code}]" }
 
-        val title = parseHtml(response.bodyAsText) { document ->
-            document.select("title").text().trim()
-        }
+        val data = extractor.extract(response.bodyAsText, mapOf(
+            "pageTitle" to "//title/text()",
+        ))
 
-        if (title.startsWith("Excluded from the LiveChart.me Database")) {
+        if (data.string("pageTitle").trim().startsWith("Excluded from the LiveChart.me Database")) {
             onDeadEntry.invoke(id)
             return@withContext EMPTY
         }

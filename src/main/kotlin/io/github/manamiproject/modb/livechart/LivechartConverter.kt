@@ -1,20 +1,23 @@
 package io.github.manamiproject.modb.livechart
 
-import io.github.manamiproject.modb.core.json.Json
 import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extractor.DataExtractor
+import io.github.manamiproject.modb.core.extractor.ExtractionResult
+import io.github.manamiproject.modb.core.extractor.JsonDataExtractor
+import io.github.manamiproject.modb.core.extractor.XmlDataExtractor
 import io.github.manamiproject.modb.core.models.*
+import io.github.manamiproject.modb.core.models.Anime.Companion.NO_PICTURE
+import io.github.manamiproject.modb.core.models.Anime.Companion.NO_PICTURE_THUMBNAIL
 import io.github.manamiproject.modb.core.models.Anime.Status.*
 import io.github.manamiproject.modb.core.models.Anime.Type.*
 import io.github.manamiproject.modb.core.models.Anime.Type.UNKNOWN
 import io.github.manamiproject.modb.core.models.AnimeSeason.Season.*
 import io.github.manamiproject.modb.core.models.Duration.TimeUnit.SECONDS
-import io.github.manamiproject.modb.core.parseHtml
 import kotlinx.coroutines.withContext
 import org.apache.commons.text.StringEscapeUtils
-import org.jsoup.nodes.Document
 import java.net.URI
 
 /**
@@ -25,56 +28,76 @@ import java.net.URI
  */
 public class LivechartConverter(
     private val config: MetaDataProviderConfig = LivechartConfig,
+    private val xmlExtractor: DataExtractor = XmlDataExtractor,
+    private val jsonExtractor: DataExtractor = JsonDataExtractor,
 ): AnimeConverter {
 
     override suspend fun convert(rawContent: String): Anime = withContext(LIMITED_CPU) {
-        val htmlDocument = parseHtml(rawContent)
-        val rawJson = htmlDocument.select("script[type=application/ld+json]").first()!!.data().trim()
-        val jsonData = LivechartData(Json.parseJson<LivechartParsedData>(rawJson)!!)
+        val data = xmlExtractor.extract(rawContent, mapOf(
+            "jsonld" to "//script[@type='application/ld+json']/node()",
+            "title" to "//meta[@property='og:title']/@content",
+            "image" to "//meta[@property='og:image']/@content",
+            "episodesDiv" to "//div[contains(text(), 'Episodes')]/../text()",
+            "episodesCountdown" to "//div[@data-controller='countdown-bar']//div[contains(text(), 'EP')]/text()",
+            "type" to "//div[contains(text(), 'Format')]/..",
+            "status" to "//div[contains(text(), 'Status')]/..",
+            "duration" to "//div[contains(text(), 'Run time')]/..",
+            "season" to "//div[contains(text(), 'Season')]/../a/text()",
+            "year" to "//div[contains(text(), 'Premiere')]/following-sibling::*",
+            "relatedAnime" to "//div[@data-controller='carousel']//article/a/@href",
+            "tags" to "//div[contains(text(), 'Tags')]/..//a[@data-anime-details-target='tagChip']",
+            "sourceDiv" to "//div[@data-anime-details-id]/@data-anime-details-id",
+            "sourceMeta" to "//meta[@property='og:url']/@content",
+        ))
 
-        val picture = extractPicture(jsonData, htmlDocument)
-        val sources = extractSourcesEntry(jsonData, htmlDocument)
+        val jsonld = data.listNotNull<String>("jsonld").first()
+        val jsonldData = jsonExtractor.extract(jsonld, mapOf(
+            "url" to "$.url",
+            "genre" to "$.genre",
+            "name" to "$.name",
+            "image" to "$.image",
+            "numberOfEpisodes" to "$.numberOfEpisodes",
+            "datePublished" to "$.datePublished",
+            "alternateName" to "$.alternateName",
+        ))
+
+        val picture = extractPicture(jsonldData, data)
 
         return@withContext Anime(
-            _title = extractTitle(jsonData, htmlDocument),
-            episodes = extractEpisodes(jsonData, htmlDocument),
-            type = extractType(htmlDocument),
+            _title = extractTitle(jsonldData, data),
+            episodes = extractEpisodes(jsonldData, data),
+            type = extractType(data),
             picture = picture,
             thumbnail = findThumbnail(picture),
-            status = extractStatus(htmlDocument),
-            duration = extractDuration(htmlDocument),
-            animeSeason = extractAnimeSeason(htmlDocument)
-        ).apply {
-            addSources(sources)
-            addSynonyms(extractSynonyms(jsonData))
-            addRelatedAnime(extractRelatedAnime(htmlDocument))
-            addTags(extractTags(jsonData, htmlDocument))
-        }
+            status = extractStatus(data),
+            duration = extractDuration(data),
+            animeSeason = extractAnimeSeason(data),
+            sources = extractSourcesEntry(jsonldData, data),
+            synonyms = extractSynonyms(jsonldData),
+            relatedAnime = extractRelatedAnime(data),
+            tags = extractTags(jsonldData, data),
+        )
     }
 
-    private fun extractTitle(jsonData: LivechartData, document: Document): Title {
-        val extractedTitle = jsonData.name.ifBlank {
-            document.select("meta[property=og:title]").attr("content").trim()
+    private fun extractTitle(jsonData: ExtractionResult, data: ExtractionResult): Title {
+        val name = jsonData.stringOrDefault("name").ifBlank {
+            data.stringOrDefault("title")
         }
 
-        return StringEscapeUtils.unescapeHtml4(extractedTitle)
+        return StringEscapeUtils.unescapeHtml4(name)
     }
 
-    private fun extractEpisodes(jsonData: LivechartData, document: Document): Episodes {
+    private fun extractEpisodes(jsonData: ExtractionResult, data: ExtractionResult): Episodes {
         // JSON data
-        var episodes = jsonData.numberOfEpisodes
+        var episodes = jsonData.intOrDefault("numberOfEpisodes")
         var isTableValueUnknown = false
 
         // regular value in data table
         if (episodes == 0) {
-            val episodesValue = document.select("div:matchesOwn(^Episodes\$)").takeIf { it.size > 0 }
-                ?.parents()?.get(0)?.takeIf { it.childrenSize() > 1 }
-                ?.child(1)
-                ?.text()
-                ?.trim()
-                ?.split('/')
-                ?.last()
-                ?: "?"
+            val episodesValue = data.stringOrDefault("episodesDiv", "?")
+                .trim()
+                .split('/')
+                .last()
 
             if (episodesValue != "?" && episodesValue != "-") {
                 episodes = episodesValue.toIntOrNull() ?: 0
@@ -85,9 +108,7 @@ public class LivechartConverter(
 
         // current episode from table if the anime is ongoing
         if (episodes == 0) {
-            episodes = document.select("div[data-controller=countdown-bar]")
-                .select("div:matchesOwn(EP\\d+)")
-                .text()
+            episodes = data.stringOrDefault("episodesCountdown")
                 .replace("EP", EMPTY)
                 .trim()
                 .toIntOrNull()
@@ -104,55 +125,48 @@ public class LivechartConverter(
         }
     }
 
-    private fun extractType(document: Document): Anime.Type {
-        val value = document.select("div:matchesOwn(^Format\$)")
-            .parents()[0]
-            .ownText()
-            .trim()
+    private fun extractType(data: ExtractionResult): Anime.Type {
+        val value = data.string("type")
 
-        return when(value) {
-            "Movie" -> MOVIE
-            "OVA" -> OVA
-            "Special" -> SPECIAL
-            "TV" -> TV
-            "TV Short" -> TV
-            "TV Special" -> SPECIAL
-            "Web" -> ONA
-            "Web Short" -> ONA
+        return when(value.trim().lowercase()) {
+            "movie" -> MOVIE
+            "ova" -> OVA
+            "special" -> SPECIAL
+            "tv" -> TV
+            "tv short" -> TV
+            "tv special" -> SPECIAL
+            "web" -> ONA
+            "web short" -> ONA
             "?" -> UNKNOWN
-            "Unknown" -> UNKNOWN
+            "unknown" -> UNKNOWN
             else -> throw IllegalStateException("Unknown type [$value]")
         }
     }
 
-    private fun extractPicture(jsonData: LivechartData, document: Document): URI {
-        var value = jsonData.image.ifBlank {
-            document.select("meta[property=og:image]").attr("content").trim()
+    private fun extractPicture(jsonData: ExtractionResult, data: ExtractionResult): URI {
+        val value = jsonData.stringOrDefault("image").ifBlank {
+            data.stringOrDefault("image")
         }
 
-        if (!value.endsWith(LARGE_PICTURE_INDICATOR)) {
-            value = NO_PIC
+        return if (!value.endsWith(LARGE_PICTURE_INDICATOR)) {
+            NO_PICTURE
+        } else {
+            URI(value)
         }
-
-        return URI(value)
     }
 
     private fun findThumbnail(uri: URI): URI {
-        return if (uri.toString() == NO_PIC) {
-            URI("https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic_thumbnail.png")
+        return if (uri == NO_PICTURE) {
+            NO_PICTURE_THUMBNAIL
         } else {
             URI(uri.toString().replace(LARGE_PICTURE_INDICATOR, SMALL_PICTURE_INDICATOR))
         }
     }
 
-    private fun extractStatus(document: Document): Anime.Status {
-        val statusString = document.select("div:matchesOwn(^Status\$)")
-            .parents()[0]
-            .ownText()
-            .trim()
-            .lowercase()
+    private fun extractStatus(data: ExtractionResult): Anime.Status {
+        val statusString = data.stringOrDefault("status")
 
-        return when (statusString){
+        return when (statusString.trim().lowercase()){
             "not yet released" -> UPCOMING
             "releasing" -> ONGOING
             "finished" -> FINISHED
@@ -160,11 +174,8 @@ public class LivechartConverter(
         }
     }
 
-    private fun extractDuration(document: Document): Duration {
-        val durationString = document.select("div:matchesOwn(^Run time\$)")
-            .parents()[0]
-            .ownText()
-            .trim()
+    private fun extractDuration(data: ExtractionResult): Duration {
+        val durationString = data.stringOrDefault("duration").trim()
 
         val seconds = Regex("([0-9]+ ?[aA-zZ]+)+")
             .findAll(durationString)
@@ -187,23 +198,14 @@ public class LivechartConverter(
         return Duration(seconds, SECONDS)
     }
 
-    private fun extractAnimeSeason(document: Document): AnimeSeason {
-        val seasonList = document.select("div:matchesOwn(^Season\$)").parents()
-        val splitSeasonString = if (seasonList.isNotEmpty()) {
-            seasonList[0]
-                .select("a")
-                .text()
-                .split(' ')
+    private fun extractAnimeSeason(data: ExtractionResult): AnimeSeason {
+        val splitSeasonString = if (data.notFound("season")) {
+            listOf(EMPTY)
         } else {
-            emptyList()
+            data.listNotNull<String>("season").first().replace("Season ", EMPTY).split(' ')
         }
 
-        val seasonString = if (seasonList.isNotEmpty()) {
-            splitSeasonString.first().trim().lowercase()
-        } else {
-            EMPTY
-        }
-
+        val seasonString = splitSeasonString.first().trim().lowercase()
         val season = when(seasonString) {
             "winter" -> WINTER
             "spring" -> SPRING
@@ -213,12 +215,9 @@ public class LivechartConverter(
         }
 
         val year = if (splitSeasonString.size == 2) {
-            splitSeasonString[1].trim().ifBlank { "0" }.toIntOrNull() ?: 0
+            YEAR_REGEX.find(splitSeasonString[1])?.value?.trim()?.ifBlank { "0" }?.toIntOrNull() ?: 0
         } else {
-            val linkContainingPremiere = document.select("div[class=section-heading]:matchesOwn(Premiere)")
-                .next()
-                .text()
-            (Regex("[0-9]{4}").find(linkContainingPremiere)?.value?.trim() ?: "0").ifBlank { "0" }.toIntOrNull() ?: 0
+            YEAR_REGEX.find(data.stringOrDefault("year"))?.value?.trim()?.toIntOrNull() ?: 0
         }
 
         return AnimeSeason(
@@ -227,43 +226,52 @@ public class LivechartConverter(
         )
     }
 
-    private fun extractSourcesEntry(jsonData: LivechartData, document: Document): Collection<URI> {
-        val id = document.select("div[data-anime-details-id]").attr("data-anime-details-id").trim()
-        var source = config.buildAnimeLink(id)
-
-        if (id.isBlank()) {
-            val link = jsonData.url.replace("www.", EMPTY).ifBlank {
-                document.select("meta[property=og:url]").attr("content").trim().replace("www.", EMPTY)
-            }
-            source = URI(link)
+    private fun extractSourcesEntry(jsonData: ExtractionResult, data: ExtractionResult): HashSet<URI> {
+        if (!data.notFound("sourceDiv")) {
+            return hashSetOf(config.buildAnimeLink(data.string("sourceDiv")))
         }
 
-        return setOf(source)
+        if (jsonData.notFound("url")) {
+            val link = jsonData.string("url").trim().replace("www.", EMPTY).ifBlank {
+                data.string("sourceMeta").trim().replace("www.", EMPTY)
+            }
+
+            return hashSetOf(URI(link))
+        }
+
+        throw IllegalStateException("Unable to extract source.")
     }
 
-    private fun extractSynonyms(jsonData: LivechartData): Collection<Title> {
-        return jsonData.alternateName.map { StringEscapeUtils.unescapeHtml4(it) }.toSet()
+    private fun extractSynonyms(jsonData: ExtractionResult): HashSet<Title> {
+        return jsonData.listNotNull<Title>("alternateName")
+            .map { StringEscapeUtils.unescapeHtml4(it) }
+            .toHashSet()
     }
 
-    private fun extractRelatedAnime(document: Document): Collection<URI> {
-        return document.select("div[data-controller=carousel] > div > article > a")
-            .map { it.attr("href") }
-            .map { it.replace("/anime/", EMPTY) }
-            .map { config.buildAnimeLink(it) }
+    private fun extractRelatedAnime(data: ExtractionResult): HashSet<URI> {
+        return if (data.notFound("relatedAnime")) {
+            hashSetOf()
+        } else {
+            data.listNotNull<String>("relatedAnime")
+                .map { it.replace("/anime/", EMPTY) }
+                .map { config.buildAnimeLink(it) }
+                .toHashSet()
+        }
     }
 
-    private fun extractTags(jsonData: LivechartData, document: Document): Collection<Tag> {
-        val tags: MutableSet<String> = jsonData.genre.toMutableSet().ifEmpty { mutableSetOf() }
+    private fun extractTags(jsonData: ExtractionResult, data: ExtractionResult): HashSet<Tag> {
+        val tags: HashSet<String> = if (jsonData.notFound("genre")) {
+            hashSetOf()
+        } else {
+            jsonData.listNotNull<Tag>("genre")
+                .map { it.trim().lowercase() }
+                .toHashSet()
+        }
 
-        if (tags.isEmpty()) {
-            document.select("div:matchesOwn(^Tags\$)")
-                .next()
-                .select("a[data-anime-details-target=tagChip]")
-                .textNodes()
-                .map { it.text().trim() }
-                .forEach {
-                    tags.add(it)
-                }
+        if (!data.notFound("tags")) {
+            data.listNotNull<Tag>("tags")
+                .map { it.trim().lowercase() }
+                .forEach { tags.add(it) }
         }
 
         return tags
@@ -272,41 +280,6 @@ public class LivechartConverter(
     private companion object {
         private const val LARGE_PICTURE_INDICATOR = "large.jpg"
         private const val SMALL_PICTURE_INDICATOR = "small.jpg"
-        private const val NO_PIC = "https://raw.githubusercontent.com/manami-project/anime-offline-database/master/pics/no_pic.png"
+        private val YEAR_REGEX = """\d{4}""".toRegex()
     }
-}
-
-private data class LivechartParsedData(
-    val url: String? = null,
-    val genre: List<String>? = null,
-    val name: String? = null,
-    val image: String? = null,
-    val numberOfEpisodes: Int? = null,
-    val datePublished: String? = null,
-    val alternateName: List<String>? = null,
-)
-
-private data class LivechartData(
-    val livechartParsedData: LivechartParsedData
-) {
-    val url: String
-        get() = livechartParsedData.url?.trim() ?: EMPTY
-
-    val genre: Set<String>
-        get() = livechartParsedData.genre?.map { it.trim() }?.toSet() ?: emptySet()
-
-    val name: String
-        get() = livechartParsedData.name?.trim() ?: EMPTY
-
-    val image: String
-        get() = livechartParsedData.image?.trim() ?: EMPTY
-
-    val numberOfEpisodes: Int
-        get() = livechartParsedData.numberOfEpisodes ?: 0
-
-    val datePublished: String
-        get() = livechartParsedData.datePublished?.trim() ?: EMPTY
-
-    val alternateName: Set<String>
-        get() = livechartParsedData.alternateName?.map { it.trim() }?.toSet() ?: emptySet()
 }

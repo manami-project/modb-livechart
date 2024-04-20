@@ -805,6 +805,7 @@ internal class LivechartConverterTest {
                     "romantic subtext",
                     "supernatural",
                     "workplace",
+                    "sequel",
                 )
             }
         }
