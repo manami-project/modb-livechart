@@ -188,13 +188,21 @@ public class LivechartConverter(
     }
 
     private fun extractAnimeSeason(document: Document): AnimeSeason {
-        val splitSeasonString = document.select("div:matchesOwn(^Season\$)")
-            .parents()[0]
-            .select("a")
-            .text()
-            .split(' ')
+        val seasonList = document.select("div:matchesOwn(^Season\$)").parents()
+        val splitSeasonString = if (seasonList.isNotEmpty()) {
+            seasonList[0]
+                .select("a")
+                .text()
+                .split(' ')
+        } else {
+            emptyList()
+        }
 
-        val seasonString = splitSeasonString.first().trim().lowercase()
+        val seasonString = if (seasonList.isNotEmpty()) {
+            splitSeasonString.first().trim().lowercase()
+        } else {
+            EMPTY
+        }
 
         val season = when(seasonString) {
             "winter" -> WINTER

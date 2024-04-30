@@ -983,6 +983,30 @@ internal class LivechartConverterTest {
                     assertThat(result.animeSeason.season).isEqualTo(WINTER)
                 }
             }
+
+            @Test
+            fun `season is 'UNDEFINED' because there is no element containing season info`() {
+                runBlocking {
+                    // given
+                    val testLivechartConfig = object : MetaDataProviderConfig by MetaDataProviderTestConfig {
+                        override fun buildAnimeLink(id: AnimeId): URI = LivechartConfig.buildAnimeLink(id)
+                        override fun buildDataDownloadLink(id: String): URI = LivechartConfig.buildDataDownloadLink(id)
+                        override fun fileSuffix(): FileSuffix = LivechartConfig.fileSuffix()
+                    }
+
+                    val testFile = loadTestResource<String>("file_converter_tests/anime_season/season/no_season_element.html")
+
+                    val converter = LivechartConverter(
+                        config = testLivechartConfig,
+                    )
+
+                    // when
+                    val result = converter.convert(testFile)
+
+                    // then
+                    assertThat(result.animeSeason.season).isEqualTo(UNDEFINED)
+                }
+            }
         }
 
         @Nested
