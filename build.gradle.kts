@@ -40,7 +40,7 @@ dependencies {
     implementation("org.apache.commons:commons-text:1.12.0")
 
     testImplementation("ch.qos.logback:logback-classic:1.5.6")
-    testImplementation("io.github.manamiproject:modb-test:1.6.8")
+    testImplementation("io.github.manamiproject:modb-test:1.6.9")
 }
 
 kotlin {
