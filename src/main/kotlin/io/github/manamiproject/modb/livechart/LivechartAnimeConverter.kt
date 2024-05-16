@@ -26,7 +26,7 @@ import java.net.URI
  * @since 1.0.0
  * @param config Configuration for converting data.
  */
-public class LivechartConverter(
+public class LivechartAnimeConverter(
     private val config: MetaDataProviderConfig = LivechartConfig,
     private val xmlExtractor: DataExtractor = XmlDataExtractor,
     private val jsonExtractor: DataExtractor = JsonDataExtractor,
