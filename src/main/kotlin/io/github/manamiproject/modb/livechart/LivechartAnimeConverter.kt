@@ -4,6 +4,7 @@ import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.converter.AnimeConverter
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_CPU
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extensions.remove
 import io.github.manamiproject.modb.core.extractor.DataExtractor
 import io.github.manamiproject.modb.core.extractor.ExtractionResult
 import io.github.manamiproject.modb.core.extractor.JsonDataExtractor
@@ -109,7 +110,7 @@ public class LivechartAnimeConverter(
         // current episode from table if the anime is ongoing
         if (episodes == 0) {
             episodes = data.stringOrDefault("episodesCountdown")
-                .replace("EP", EMPTY)
+                .remove("EP")
                 .trim()
                 .toIntOrNull()
                 ?: 0
@@ -202,7 +203,7 @@ public class LivechartAnimeConverter(
         val splitSeasonString = if (data.notFound("season")) {
             listOf(EMPTY)
         } else {
-            data.listNotNull<String>("season").first().replace("Season ", EMPTY).split(' ')
+            data.listNotNull<String>("season").first().remove("Season ").split(' ')
         }
 
         val seasonString = splitSeasonString.first().trim().lowercase()
@@ -232,8 +233,8 @@ public class LivechartAnimeConverter(
         }
 
         if (jsonData.notFound("url")) {
-            val link = jsonData.string("url").trim().replace("www.", EMPTY).ifBlank {
-                data.string("sourceMeta").trim().replace("www.", EMPTY)
+            val link = jsonData.string("url").trim().remove("www.").ifBlank {
+                data.string("sourceMeta").trim().remove("www.")
             }
 
             return hashSetOf(URI(link))
@@ -253,7 +254,7 @@ public class LivechartAnimeConverter(
             hashSetOf()
         } else {
             data.listNotNull<String>("relatedAnime")
-                .map { it.replace("/anime/", EMPTY) }
+                .map { it.remove("/anime/") }
                 .map { config.buildAnimeLink(it) }
                 .toHashSet()
         }

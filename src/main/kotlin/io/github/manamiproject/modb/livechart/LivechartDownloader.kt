@@ -5,6 +5,7 @@ import io.github.manamiproject.modb.core.config.MetaDataProviderConfig
 import io.github.manamiproject.modb.core.coroutines.ModbDispatchers.LIMITED_NETWORK
 import io.github.manamiproject.modb.core.downloader.Downloader
 import io.github.manamiproject.modb.core.extensions.EMPTY
+import io.github.manamiproject.modb.core.extensions.neitherNullNorBlank
 import io.github.manamiproject.modb.core.extractor.DataExtractor
 import io.github.manamiproject.modb.core.extractor.XmlDataExtractor
 import io.github.manamiproject.modb.core.httpclient.DefaultHttpClient
@@ -36,7 +37,7 @@ public class LivechartDownloader(
             headers = mapOf("host" to listOf("www.${config.hostname()}")),
         )
 
-        check(response.bodyAsText.isNotBlank()) { "Response body was blank for [livechartId=$id] with response code [${response.code}]" }
+        check(response.bodyAsText.neitherNullNorBlank()) { "Response body was blank for [livechartId=$id] with response code [${response.code}]" }
 
         val data = extractor.extract(response.bodyAsText, mapOf(
             "pageTitle" to "//title/text()",
