@@ -1289,4 +1289,21 @@ internal class LivechartAnimeConverterTest {
             }
         }
     }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = LivechartAnimeConverter.instance
+
+            // when
+            val result = LivechartAnimeConverter.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(LivechartAnimeConverter::class.java)
+            assertThat(result===previous).isTrue()
+        }
+    }
 }
