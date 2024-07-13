@@ -11,8 +11,9 @@ import io.github.manamiproject.modb.core.extensions.toAnimeId
 import io.github.manamiproject.modb.test.*
 import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
-import kotlin.test.Test
+import org.junit.jupiter.api.Nested
 import java.net.URI
+import kotlin.test.Test
 
 internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by WireMockServerCreator() {
 
@@ -184,5 +185,22 @@ internal class LivechartDownloaderTest : MockServerTestCase<WireMockServer> by W
 
         // then
         assertThat(result).hasMessage("Unable to determine the correct case for [livechartId=$id], [responseCode=400]")
+    }
+
+    @Nested
+    inner class CompanionObjectTests {
+
+        @Test
+        fun `instance property always returns same instance`() {
+            // given
+            val previous = LivechartDownloader.instance
+
+            // when
+            val result = LivechartDownloader.instance
+
+            // then
+            assertThat(result).isExactlyInstanceOf(LivechartDownloader::class.java)
+            assertThat(result===previous).isTrue()
+        }
     }
 }

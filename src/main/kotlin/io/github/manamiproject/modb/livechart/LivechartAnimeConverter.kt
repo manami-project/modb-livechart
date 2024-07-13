@@ -278,9 +278,15 @@ public class LivechartAnimeConverter(
         return tags
     }
 
-    private companion object {
+    public companion object {
         private const val LARGE_PICTURE_INDICATOR = "large.jpg"
         private const val SMALL_PICTURE_INDICATOR = "small.jpg"
         private val YEAR_REGEX = """\d{4}""".toRegex()
+
+        /**
+         * Singleton of [LivechartAnimeConverter]
+         * @since 3.1.0
+         */
+        public val instance: LivechartAnimeConverter by lazy { LivechartAnimeConverter() }
     }
 }

@@ -58,7 +58,13 @@ public class LivechartDownloader(
         }
     }
 
-    private companion object {
+    public companion object {
         private val log by LoggerDelegate()
+
+        /**
+         * Singleton of [LivechartDownloader]
+         * @since 3.1.0
+         */
+        public val instance: LivechartDownloader by lazy { LivechartDownloader() }
     }
 }
