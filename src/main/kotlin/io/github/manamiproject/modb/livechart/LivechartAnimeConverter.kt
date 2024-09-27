@@ -25,10 +25,10 @@ import java.net.URI
  * Converts raw data to an [Anime].
  * Requires raw HTML. -> test
  * @since 1.0.0
- * @param config Configuration for converting data.
+ * @param metaDataProviderConfig Configuration for converting data.
  */
 public class LivechartAnimeConverter(
-    private val config: MetaDataProviderConfig = LivechartConfig,
+    private val metaDataProviderConfig: MetaDataProviderConfig = LivechartConfig,
     private val xmlExtractor: DataExtractor = XmlDataExtractor,
     private val jsonExtractor: DataExtractor = JsonDataExtractor,
 ): AnimeConverter {
@@ -229,7 +229,7 @@ public class LivechartAnimeConverter(
 
     private fun extractSourcesEntry(jsonData: ExtractionResult, data: ExtractionResult): HashSet<URI> {
         if (!data.notFound("sourceDiv")) {
-            return hashSetOf(config.buildAnimeLink(data.string("sourceDiv")))
+            return hashSetOf(metaDataProviderConfig.buildAnimeLink(data.string("sourceDiv")))
         }
 
         if (jsonData.notFound("url")) {
@@ -255,7 +255,7 @@ public class LivechartAnimeConverter(
         } else {
             data.listNotNull<String>("relatedAnime")
                 .map { it.remove("/anime/") }
-                .map { config.buildAnimeLink(it) }
+                .map { metaDataProviderConfig.buildAnimeLink(it) }
                 .toHashSet()
         }
     }
