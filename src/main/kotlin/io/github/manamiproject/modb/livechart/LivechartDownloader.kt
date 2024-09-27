@@ -17,15 +17,15 @@ import kotlinx.coroutines.withContext
 /**
  * Downloads anime data from livechart.me
  * @since 1.0.0
- * @param config Configuration for downloading data.
+ * @param metaDataProviderConfig Configuration for downloading data.
  * @param httpClient To actually download the anime data.
  */
 public class LivechartDownloader(
-    private val config: MetaDataProviderConfig = LivechartConfig,
+    private val metaDataProviderConfig: MetaDataProviderConfig = LivechartConfig,
     private val extractor: DataExtractor = XmlDataExtractor,
     private val httpClient: HttpClient = DefaultHttpClient(
         protocols = mutableListOf(HTTP_1_1),
-        isTestContext = config.isTestContext(),
+        isTestContext = metaDataProviderConfig.isTestContext(),
     ),
 ): Downloader {
 
@@ -33,8 +33,8 @@ public class LivechartDownloader(
         log.debug { "Downloading [livechartId=$id]" }
 
         val response = httpClient.get(
-            url = config.buildDataDownloadLink(id).toURL(),
-            headers = mapOf("host" to listOf("www.${config.hostname()}")),
+            url = metaDataProviderConfig.buildDataDownloadLink(id).toURL(),
+            headers = mapOf("host" to listOf("www.${metaDataProviderConfig.hostname()}")),
         )
 
         check(response.bodyAsText.neitherNullNorBlank()) { "Response body was blank for [livechartId=$id] with response code [${response.code}]" }

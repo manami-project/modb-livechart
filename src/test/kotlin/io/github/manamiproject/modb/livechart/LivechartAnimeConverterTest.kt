@@ -34,7 +34,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/title/special_chars.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -58,7 +58,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/title/encoded_special_char.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -86,7 +86,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/synonyms/no_synonyms.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -110,7 +110,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/synonyms/one_synonym.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -134,7 +134,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/synonyms/multiple_synonyms.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -161,7 +161,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/synonyms/encoded_special_chars.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -189,7 +189,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/episodes/unknown.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -213,7 +213,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/episodes/1.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -237,7 +237,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/episodes/10.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -261,7 +261,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/episodes/100.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -285,7 +285,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/episodes/number_of_episodes_unknown_but_currently_running.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -309,7 +309,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/episodes/number_of_episodes_known_and_running.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -337,7 +337,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/sources/3437.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -367,7 +367,7 @@ internal class LivechartAnimeConverterTest {
 
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -394,7 +394,7 @@ internal class LivechartAnimeConverterTest {
 
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -423,7 +423,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/type/tv.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -447,7 +447,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/type/unknown.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -471,7 +471,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/type/tv_short.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -495,7 +495,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/type/movie.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -519,7 +519,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/type/web_short.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -543,7 +543,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/type/web.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -567,7 +567,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/type/ova.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -591,7 +591,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/type/special.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -619,7 +619,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/duration/1_hour.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -643,7 +643,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/duration/1_hour_11_min.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -667,7 +667,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/duration/2_hours.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -691,7 +691,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/duration/2_hours_15_minutes.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -715,7 +715,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/duration/10_min.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -739,7 +739,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/duration/30_sec.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -763,7 +763,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/duration/unknown.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -791,7 +791,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/tags/multiple_tags.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -823,7 +823,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/tags/one_tag.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -847,7 +847,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/tags/no_tags.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -878,7 +878,7 @@ internal class LivechartAnimeConverterTest {
                     val testFile = loadTestResource<String>("file_converter_tests/anime_season/season/undefined.html")
 
                     val converter = LivechartAnimeConverter(
-                        config = testLivechartConfig,
+                        metaDataProviderConfig = testLivechartConfig,
                     )
 
                     // when
@@ -902,7 +902,7 @@ internal class LivechartAnimeConverterTest {
                     val testFile = loadTestResource<String>("file_converter_tests/anime_season/season/fall.html")
 
                     val converter = LivechartAnimeConverter(
-                        config = testLivechartConfig,
+                        metaDataProviderConfig = testLivechartConfig,
                     )
 
                     // when
@@ -926,7 +926,7 @@ internal class LivechartAnimeConverterTest {
                     val testFile = loadTestResource<String>("file_converter_tests/anime_season/season/spring.html")
 
                     val converter = LivechartAnimeConverter(
-                        config = testLivechartConfig,
+                        metaDataProviderConfig = testLivechartConfig,
                     )
 
                     // when
@@ -950,7 +950,7 @@ internal class LivechartAnimeConverterTest {
                     val testFile = loadTestResource<String>("file_converter_tests/anime_season/season/summer.html")
 
                     val converter = LivechartAnimeConverter(
-                        config = testLivechartConfig,
+                        metaDataProviderConfig = testLivechartConfig,
                     )
 
                     // when
@@ -974,7 +974,7 @@ internal class LivechartAnimeConverterTest {
                     val testFile = loadTestResource<String>("file_converter_tests/anime_season/season/winter.html")
 
                     val converter = LivechartAnimeConverter(
-                        config = testLivechartConfig,
+                        metaDataProviderConfig = testLivechartConfig,
                     )
 
                     // when
@@ -998,7 +998,7 @@ internal class LivechartAnimeConverterTest {
                     val testFile = loadTestResource<String>("file_converter_tests/anime_season/season/no_season_element.html")
 
                     val converter = LivechartAnimeConverter(
-                        config = testLivechartConfig,
+                        metaDataProviderConfig = testLivechartConfig,
                     )
 
                     // when
@@ -1027,7 +1027,7 @@ internal class LivechartAnimeConverterTest {
                         loadTestResource<String>("file_converter_tests/anime_season/year_of_premiere/season_set.html")
 
                     val converter = LivechartAnimeConverter(
-                        config = testLivechartConfig,
+                        metaDataProviderConfig = testLivechartConfig,
                     )
 
                     // when
@@ -1052,7 +1052,7 @@ internal class LivechartAnimeConverterTest {
                         loadTestResource<String>("file_converter_tests/anime_season/year_of_premiere/season_tba_premiere_set.html")
 
                     val converter = LivechartAnimeConverter(
-                        config = testLivechartConfig,
+                        metaDataProviderConfig = testLivechartConfig,
                     )
 
                     // when
@@ -1077,7 +1077,7 @@ internal class LivechartAnimeConverterTest {
                         loadTestResource<String>("file_converter_tests/anime_season/year_of_premiere/season_tba_premiere_not_set.html")
 
                     val converter = LivechartAnimeConverter(
-                        config = testLivechartConfig,
+                        metaDataProviderConfig = testLivechartConfig,
                     )
 
                     // when
@@ -1106,7 +1106,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/status/ongoing.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -1130,7 +1130,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/status/no_yet_released.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -1154,7 +1154,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/status/finished.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -1182,7 +1182,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/related_anime/no_relations.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -1206,7 +1206,7 @@ internal class LivechartAnimeConverterTest {
                 val testFile = loadTestResource<String>("file_converter_tests/related_anime/one_relation.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -1233,7 +1233,7 @@ internal class LivechartAnimeConverterTest {
                     loadTestResource<String>("file_converter_tests/related_anime/multiple_relations_no_scrolling.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
@@ -1262,7 +1262,7 @@ internal class LivechartAnimeConverterTest {
                     loadTestResource<String>("file_converter_tests/related_anime/multiple_relations_with_scrolling.html")
 
                 val converter = LivechartAnimeConverter(
-                    config = testLivechartConfig,
+                    metaDataProviderConfig = testLivechartConfig,
                 )
 
                 // when
